@@ -1,0 +1,45 @@
+# Exalted Faith — expansion pack triggers
+
+ef_eligible_for_auto_assign_pool = {
+	is_alive = yes
+	NOT = { has_trait = ef_exalted_faithful }
+	OR = {
+		is_councillor_of = scope:ef_patron
+		is_consort_of = scope:ef_patron
+		is_courtier_of = scope:ef_patron
+		is_pool_guest_of = scope:ef_patron
+		is_foreign_court_or_pool_guest_of = scope:ef_patron
+	}
+	ef_can_receive_exalted_faithful = yes
+}
+
+ef_has_any_auto_assign_eligible = {
+	OR = {
+		any_councillor = { ef_can_receive_exalted_faithful = yes }
+		any_consort = { ef_can_receive_exalted_faithful = yes }
+		any_courtier_or_guest = { ef_can_receive_exalted_faithful = yes }
+	}
+}
+
+ef_has_any_exalted_faithful = {
+	OR = {
+		any_in_list = {
+			variable = ef_bound_faithful
+			count >= 1
+			limit = {
+				is_alive = yes
+				has_trait = ef_exalted_faithful
+			}
+		}
+		any_vassal = {
+			has_trait = ef_exalted_faithful
+			exists = var:ef_patron
+			var:ef_patron = root
+		}
+		any_courtier_or_guest = {
+			has_trait = ef_exalted_faithful
+			exists = var:ef_patron
+			var:ef_patron = root
+		}
+	}
+}

@@ -83,3 +83,35 @@ ef_events.1212 = {
 		name = ef_events.1212.a
 	}
 }
+
+ef_events.1501 = {
+	type = character_event
+	title = ef_events.1501.t
+	desc = ef_events.1501.desc
+	theme = faith
+	option = { name = ef_events.1501.a }
+}
+
+ef_events.1502 = {
+	type = character_event
+	title = ef_events.1502.t
+	desc = ef_events.1502.desc
+	theme = faith
+	option = { name = ef_events.1502.a }
+}
+
+ef_events.1503 = {
+	type = character_event
+	title = ef_events.1503.t
+	desc = ef_events.1503.desc
+	theme = faith
+	option = { name = ef_events.1503.a }
+}
+
+ef_events.1504 = {
+	type = character_event
+	title = ef_events.1504.t
+	desc = ef_events.1504.desc
+	theme = faith
+	option = { name = ef_events.1504.a }
+}

@@ -158,3 +158,59 @@ ef_on_death = {
 		}
 	}
 }
+
+on_birth_child = {
+	on_actions = { ef_on_birth_child }
+}
+
+ef_on_birth_child = {
+	trigger = {
+		OR = {
+			AND = {
+				exists = mother
+				mother = { has_trait = ef_exalted_faithful }
+			}
+			AND = {
+				exists = father
+				father = { has_trait = ef_exalted_faithful }
+			}
+		}
+	}
+	effect = {
+		ef_try_inherit_exalted_faithful_effect = yes
+	}
+}
+
+on_join_court = {
+	on_actions = { ef_on_join_court_auto_grant }
+}
+
+ef_on_join_court_auto_grant = {
+	trigger = {
+		NOT = { has_trait = ef_exalted_faithful }
+		OR = {
+			has_game_rule = ef_rule_auto_grant_court_join
+			has_game_rule = ef_rule_auto_grant_court_and_councillors
+		}
+	}
+	effect = {
+		if = {
+			limit = {
+				exists = liege
+				liege = { is_alive = yes }
+			}
+			liege = { save_scope_as = ef_patron }
+		}
+		else_if = {
+			limit = {
+				exists = host
+				host = { is_alive = yes }
+			}
+			host = { save_scope_as = ef_patron }
+		}
+		if = {
+			limit = { exists = scope:ef_patron }
+			ef_try_auto_grant_exalted_faithful_effect = yes
+		}
+	}
+}

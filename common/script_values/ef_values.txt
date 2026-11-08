@@ -1,0 +1,78 @@
+# Exalted Faith — tunable script values
+
+@ef_learning_base = 15
+@ef_other_skill = 15
+@ef_monthly_prestige = 2
+@ef_monthly_income = 5
+@ef_health = 5
+@ef_general_opinion = 25
+@ef_stress_gain_mult = -0.2
+
+# Piety tiers (monthly)
+@ef_piety_low = 15
+@ef_piety_mid = 35
+@ef_piety_high = 60
+
+# Influence opinions
+@ef_same_faith_low = 20
+@ef_clergy_low = 20
+@ef_zealot_low = 10
+@ef_conv_cost_low = -0.1
+
+@ef_same_faith_mid = 40
+@ef_clergy_mid = 40
+@ef_zealot_mid = 25
+@ef_conv_cost_mid = -0.25
+
+@ef_same_faith_high = 60
+@ef_clergy_high = 60
+@ef_zealot_high = 40
+@ef_conv_cost_high = -0.4
+
+# Theology (Learning add + lifestyle XP mult)
+@ef_theology_learning_low = 10
+@ef_theology_xp_low = 1
+@ef_theology_learning_mid = 20
+@ef_theology_xp_mid = 2
+@ef_theology_learning_high = 30
+@ef_theology_xp_high = 3
+
+# BGA fulfillment comfort
+@ef_fulfill_gain_low = 0.1
+@ef_fulfill_loss_low = -0.1
+@ef_fulfill_gain_mid = 0.25
+@ef_fulfill_loss_mid = -0.25
+@ef_fulfill_gain_high = 0.4
+@ef_fulfill_loss_high = -0.4
+
+ef_max_faithful_value = {
+	value = 3
+	if = {
+		limit = { has_game_rule = ef_rule_max_faithful_1 }
+		value = 1
+	}
+	else_if = {
+		limit = { has_game_rule = ef_rule_max_faithful_3 }
+		value = 3
+	}
+	else_if = {
+		limit = { has_game_rule = ef_rule_max_faithful_5 }
+		value = 5
+	}
+	else_if = {
+		limit = { has_game_rule = ef_rule_max_faithful_unlimited }
+		value = 9999
+	}
+}
+
+ef_exalted_faithful_count_for_patron_value = {
+	value = 0
+	every_living_character = {
+		limit = {
+			has_trait = ef_exalted_faithful
+			exists = var:ef_patron
+			var:ef_patron = root
+		}
+		add = 1
+	}
+}

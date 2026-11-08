@@ -1,0 +1,197 @@
+# Exalted Faith — scripted triggers
+
+ef_is_exalted_faithful = {
+	has_trait = ef_exalted_faithful
+}
+
+# Soft peer: Supreme Sovereign trait key. Fails closed if SS is absent (may log once).
+ef_character_is_supreme_sovereign = {
+	has_trait = Supreme_Sovereign
+}
+
+ef_granting_disabled = {
+	has_game_rule = ef_rule_granting_disabled
+}
+
+ef_bga_features_active = {
+	has_pam_dlc_trigger = yes
+	NOT = { has_game_rule = ef_rule_bga_mode_force_core_only }
+}
+
+ef_actor_may_bestow_by_rule = {
+	NOT = { has_game_rule = ef_rule_granting_disabled }
+	trigger_if = {
+		limit = { has_game_rule = ef_rule_granting_player_only }
+		is_ai = no
+	}
+}
+
+ef_patron_under_faithful_cap = {
+	# this = patron/actor. Save before any_living_character (where this becomes the iteratee).
+	trigger_if = {
+		limit = { has_game_rule = ef_rule_max_faithful_unlimited }
+		always = yes
+	}
+	trigger_else = {
+		save_temporary_scope_as = ef_cap_patron
+		custom_tooltip = {
+			text = ef_tt_under_faithful_cap
+			NOT = {
+				any_living_character = {
+					count >= ef_max_faithful_value
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = scope:ef_cap_patron
+				}
+			}
+		}
+	}
+}
+
+# this = holder; requires var:ef_patron
+ef_in_patron_realm = {
+	exists = var:ef_patron
+	var:ef_patron = {
+		is_alive = yes
+		save_temporary_scope_as = ef_temp_patron
+	}
+	OR = {
+		this = scope:ef_temp_patron
+		is_courtier_of = scope:ef_temp_patron
+		is_pool_guest_of = scope:ef_temp_patron
+		is_foreign_court_or_pool_guest_of = scope:ef_temp_patron
+		AND = {
+			scope:ef_temp_patron = { is_landed = yes }
+			any_liege_or_above = { this = scope:ef_temp_patron }
+		}
+		AND = {
+			scope:ef_temp_patron = { is_landed = no }
+			exists = host
+			scope:ef_temp_patron = { exists = host }
+			host = scope:ef_temp_patron.host
+		}
+	}
+}
+
+# this = holder; same faith as living patron
+ef_shares_patron_faith = {
+	exists = var:ef_patron
+	exists = faith
+	var:ef_patron = {
+		is_alive = yes
+		exists = faith
+		save_temporary_scope_as = ef_faith_patron
+	}
+	faith = scope:ef_faith_patron.faith
+}
+
+ef_can_actor_bestow = {
+	is_alive = yes
+	ef_actor_may_bestow_by_rule = yes
+	ef_patron_under_faithful_cap = yes
+}
+
+# Recipient eligible (recipient = this; scope:ef_patron or scope:actor = granter)
+ef_can_receive_exalted_faithful = {
+	is_alive = yes
+	NOT = { has_trait = ef_exalted_faithful }
+	trigger_if = {
+		limit = {
+			exists = scope:ef_patron
+		}
+		OR = {
+			AND = {
+				has_game_rule = ef_rule_self_grant_yes
+				this = scope:ef_patron
+			}
+			is_courtier_of = scope:ef_patron
+			is_pool_guest_of = scope:ef_patron
+			is_foreign_court_or_pool_guest_of = scope:ef_patron
+			AND = {
+				scope:ef_patron = { is_landed = yes }
+				any_liege_or_above = { this = scope:ef_patron }
+			}
+			AND = {
+				scope:ef_patron = { is_landed = no }
+				exists = host
+				scope:ef_patron = { exists = host }
+				host = scope:ef_patron.host
+			}
+		}
+		trigger_if = {
+			limit = { has_game_rule = ef_rule_self_grant_no }
+			this != scope:ef_patron
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			exists = scope:actor
+		}
+		OR = {
+			AND = {
+				has_game_rule = ef_rule_self_grant_yes
+				this = scope:actor
+			}
+			is_courtier_of = scope:actor
+			is_pool_guest_of = scope:actor
+			is_foreign_court_or_pool_guest_of = scope:actor
+			AND = {
+				scope:actor = { is_landed = yes }
+				any_liege_or_above = { this = scope:actor }
+			}
+			AND = {
+				scope:actor = { is_landed = no }
+				exists = host
+				scope:actor = { exists = host }
+				host = scope:actor.host
+			}
+		}
+		trigger_if = {
+			limit = { has_game_rule = ef_rule_self_grant_no }
+			this != scope:actor
+		}
+	}
+	trigger_else = {
+		always = no
+	}
+	trigger_if = {
+		limit = { has_game_rule = ef_rule_mutual_exclusion_block_with_sovereign }
+		custom_tooltip = {
+			text = ef_tt_blocks_with_sovereign
+			NOT = { ef_character_is_supreme_sovereign = yes }
+		}
+	}
+}
+
+ef_should_strip_for_realm = {
+	has_trait = ef_exalted_faithful
+	has_game_rule = ef_rule_strip_on_leave_on
+	NAND = {
+		ef_in_patron_realm = yes
+	}
+}
+
+ef_should_strip_for_faith = {
+	has_trait = ef_exalted_faithful
+	has_game_rule = ef_rule_strip_on_faith_exit_on
+	exists = var:ef_patron
+	var:ef_patron = { is_alive = yes }
+	NAND = {
+		ef_shares_patron_faith = yes
+	}
+}
+
+ef_should_strip_exalted_faithful = {
+	OR = {
+		ef_should_strip_for_realm = yes
+		ef_should_strip_for_faith = yes
+	}
+}
+
+ef_actor_is_patron_of_recipient = {
+	scope:recipient = {
+		has_trait = ef_exalted_faithful
+		exists = var:ef_patron
+		var:ef_patron = scope:actor
+	}
+}

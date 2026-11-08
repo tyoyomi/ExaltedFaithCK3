@@ -1,0 +1,126 @@
+ef_rule_granting = {
+	categories = {
+		tweaks
+		ai
+	}
+
+	default = ef_rule_granting_player_only
+
+	ef_rule_granting_player_only = {
+	}
+
+	ef_rule_granting_player_and_ai = {
+		flag = blocks_achievements
+	}
+
+	ef_rule_granting_disabled = {
+	}
+}
+
+ef_rule_max_faithful = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_max_faithful_3
+
+	ef_rule_max_faithful_1 = {
+	}
+
+	ef_rule_max_faithful_3 = {
+	}
+
+	ef_rule_max_faithful_5 = {
+	}
+
+	ef_rule_max_faithful_unlimited = {
+		flag = blocks_achievements
+	}
+}
+
+ef_rule_strip_on_leave = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_strip_on_leave_on
+
+	ef_rule_strip_on_leave_on = {
+	}
+
+	ef_rule_strip_on_leave_off = {
+	}
+}
+
+ef_rule_strip_on_faith_exit = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_strip_on_faith_exit_on
+
+	ef_rule_strip_on_faith_exit_on = {
+	}
+
+	ef_rule_strip_on_faith_exit_off = {
+	}
+}
+
+ef_rule_mutual_exclusion = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_mutual_exclusion_block_with_sovereign
+
+	ef_rule_mutual_exclusion_block_with_sovereign = {
+	}
+
+	ef_rule_mutual_exclusion_allow_both = {
+	}
+}
+
+ef_rule_self_grant = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_self_grant_no
+
+	ef_rule_self_grant_no = {
+	}
+
+	ef_rule_self_grant_yes = {
+	}
+}
+
+ef_rule_piety_tier = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_piety_tier_mid
+
+	ef_rule_piety_tier_low = {
+	}
+
+	ef_rule_piety_tier_mid = {
+	}
+
+	ef_rule_piety_tier_high = {
+	}
+}
+
+ef_rule_bga_mode = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_bga_mode_auto
+
+	ef_rule_bga_mode_auto = {
+	}
+
+	ef_rule_bga_mode_force_core_only = {
+	}
+}

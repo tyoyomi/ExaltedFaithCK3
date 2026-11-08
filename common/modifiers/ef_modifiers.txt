@@ -1,0 +1,93 @@
+# Exalted Faith — tier modifiers (refreshed by ef_refresh_faithful_modifiers_effect)
+
+@ef_piety_low = 15
+@ef_piety_mid = 35
+@ef_piety_high = 60
+
+@ef_same_faith_low = 20
+@ef_clergy_low = 20
+@ef_zealot_low = 10
+@ef_conv_cost_low = -0.1
+
+@ef_same_faith_mid = 40
+@ef_clergy_mid = 40
+@ef_zealot_mid = 25
+@ef_conv_cost_mid = -0.25
+
+@ef_same_faith_high = 60
+@ef_clergy_high = 60
+@ef_zealot_high = 40
+@ef_conv_cost_high = -0.4
+
+@ef_theology_learning_low = 10
+@ef_theology_xp_low = 1
+@ef_theology_learning_mid = 20
+@ef_theology_xp_mid = 2
+@ef_theology_learning_high = 30
+@ef_theology_xp_high = 3
+
+@ef_fulfill_gain_low = 0.1
+@ef_fulfill_loss_low = -0.1
+@ef_fulfill_gain_mid = 0.25
+@ef_fulfill_loss_mid = -0.25
+@ef_fulfill_gain_high = 0.4
+@ef_fulfill_loss_high = -0.4
+
+### Piety faucet
+ef_piety_low_modifier = {
+	monthly_piety = @ef_piety_low
+}
+ef_piety_mid_modifier = {
+	monthly_piety = @ef_piety_mid
+}
+ef_piety_high_modifier = {
+	monthly_piety = @ef_piety_high
+}
+
+### Faith influence (opinion + conversion piety cost)
+ef_influence_low_modifier = {
+	same_faith_opinion = @ef_same_faith_low
+	clergy_opinion = @ef_clergy_low
+	zealot_opinion = @ef_zealot_low
+	faith_conversion_piety_cost_mult = @ef_conv_cost_low
+}
+ef_influence_mid_modifier = {
+	same_faith_opinion = @ef_same_faith_mid
+	clergy_opinion = @ef_clergy_mid
+	zealot_opinion = @ef_zealot_mid
+	faith_conversion_piety_cost_mult = @ef_conv_cost_mid
+}
+ef_influence_high_modifier = {
+	same_faith_opinion = @ef_same_faith_high
+	clergy_opinion = @ef_clergy_high
+	zealot_opinion = @ef_zealot_high
+	faith_conversion_piety_cost_mult = @ef_conv_cost_high
+}
+
+### Theology (Learning + Learning lifestyle XP)
+ef_theology_low_modifier = {
+	learning = @ef_theology_learning_low
+	monthly_learning_lifestyle_xp_gain_mult = @ef_theology_xp_low
+}
+ef_theology_mid_modifier = {
+	learning = @ef_theology_learning_mid
+	monthly_learning_lifestyle_xp_gain_mult = @ef_theology_xp_mid
+}
+ef_theology_high_modifier = {
+	learning = @ef_theology_learning_high
+	monthly_learning_lifestyle_xp_gain_mult = @ef_theology_xp_high
+}
+
+### BGA fulfillment comfort (applied only when ef_bga_features_active)
+ef_fulfillment_low_modifier = {
+	character_spiritual_fulfillment_gain_mult = @ef_fulfill_gain_low
+	character_spiritual_fulfillment_loss_mult = @ef_fulfill_loss_low
+}
+ef_fulfillment_mid_modifier = {
+	character_spiritual_fulfillment_gain_mult = @ef_fulfill_gain_mid
+	character_spiritual_fulfillment_loss_mult = @ef_fulfill_loss_mid
+}
+ef_fulfillment_high_modifier = {
+	character_spiritual_fulfillment_gain_mult = @ef_fulfill_gain_high
+	character_spiritual_fulfillment_loss_mult = @ef_fulfill_loss_high
+}

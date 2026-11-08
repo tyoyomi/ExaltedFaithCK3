@@ -1,0 +1,226 @@
+namespace = ef_settings
+
+# Manage Exalted Faith hub — holder summary + current tiers + cycle (re-opens after each cycle)
+ef_settings.1001 = {
+	type = character_event
+	title = ef_settings.1001.t
+	theme = faith
+
+	desc = {
+		desc = ef_settings.1001.desc_intro
+		desc = ef_settings.1001.desc_blank
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					any_living_character = {
+						count >= 1
+						has_trait = ef_exalted_faithful
+						exists = var:ef_patron
+						var:ef_patron = root
+					}
+				}
+				desc = ef_settings.1001.desc_holders
+			}
+			desc = ef_settings.1001.desc_holders_none
+		}
+		desc = ef_settings.1001.desc_blank
+		first_valid = {
+			triggered_desc = {
+				trigger = { var:ef_cfg_piety = 1 }
+				desc = ef_settings.tier.piety_1
+			}
+			triggered_desc = {
+				trigger = { var:ef_cfg_piety = 2 }
+				desc = ef_settings.tier.piety_2
+			}
+			triggered_desc = {
+				trigger = { var:ef_cfg_piety = 3 }
+				desc = ef_settings.tier.piety_3
+			}
+			desc = ef_settings.tier.piety_2
+		}
+		desc = ef_settings.1001.desc_blank
+		first_valid = {
+			triggered_desc = {
+				trigger = { var:ef_cfg_influence = 1 }
+				desc = ef_settings.tier.influence_1
+			}
+			triggered_desc = {
+				trigger = { var:ef_cfg_influence = 2 }
+				desc = ef_settings.tier.influence_2
+			}
+			triggered_desc = {
+				trigger = { var:ef_cfg_influence = 3 }
+				desc = ef_settings.tier.influence_3
+			}
+			desc = ef_settings.tier.influence_2
+		}
+		desc = ef_settings.1001.desc_blank
+		first_valid = {
+			triggered_desc = {
+				trigger = { var:ef_cfg_theology = 1 }
+				desc = ef_settings.tier.theology_1
+			}
+			triggered_desc = {
+				trigger = { var:ef_cfg_theology = 2 }
+				desc = ef_settings.tier.theology_2
+			}
+			triggered_desc = {
+				trigger = { var:ef_cfg_theology = 3 }
+				desc = ef_settings.tier.theology_3
+			}
+			desc = ef_settings.tier.theology_2
+		}
+		desc = ef_settings.1001.desc_blank
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					ef_bga_features_active = yes
+					var:ef_cfg_fulfillment = 1
+				}
+				desc = ef_settings.tier.fulfillment_1
+			}
+			triggered_desc = {
+				trigger = {
+					ef_bga_features_active = yes
+					var:ef_cfg_fulfillment = 2
+				}
+				desc = ef_settings.tier.fulfillment_2
+			}
+			triggered_desc = {
+				trigger = {
+					ef_bga_features_active = yes
+					var:ef_cfg_fulfillment = 3
+				}
+				desc = ef_settings.tier.fulfillment_3
+			}
+			triggered_desc = {
+				trigger = { ef_bga_features_active = no }
+				desc = ef_settings.tier.fulfillment_off
+			}
+			desc = ef_settings.tier.fulfillment_off
+		}
+		desc = ef_settings.1001.desc_blank
+		desc = ef_settings.1001.desc_footer
+	}
+
+	immediate = {
+		ef_ensure_faithful_defaults_effect = yes
+		every_living_character = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+			add_to_list = ef_my_faithful
+		}
+	}
+
+	option = {
+		name = {
+			text = {
+				first_valid = {
+					triggered_desc = {
+						trigger = { var:ef_cfg_piety = 1 }
+						desc = ef_settings.opt.piety_1
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_piety = 2 }
+						desc = ef_settings.opt.piety_2
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_piety = 3 }
+						desc = ef_settings.opt.piety_3
+					}
+					desc = ef_settings.opt.piety_2
+				}
+			}
+		}
+		custom_tooltip = ef_settings.tt.piety
+		ef_cycle_piety_cfg_effect = yes
+		trigger_event = ef_settings.1001
+	}
+
+	option = {
+		name = {
+			text = {
+				first_valid = {
+					triggered_desc = {
+						trigger = { var:ef_cfg_influence = 1 }
+						desc = ef_settings.opt.influence_1
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_influence = 2 }
+						desc = ef_settings.opt.influence_2
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_influence = 3 }
+						desc = ef_settings.opt.influence_3
+					}
+					desc = ef_settings.opt.influence_2
+				}
+			}
+		}
+		custom_tooltip = ef_settings.tt.influence
+		ef_cycle_influence_cfg_effect = yes
+		trigger_event = ef_settings.1001
+	}
+
+	option = {
+		name = {
+			text = {
+				first_valid = {
+					triggered_desc = {
+						trigger = { var:ef_cfg_theology = 1 }
+						desc = ef_settings.opt.theology_1
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_theology = 2 }
+						desc = ef_settings.opt.theology_2
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_theology = 3 }
+						desc = ef_settings.opt.theology_3
+					}
+					desc = ef_settings.opt.theology_2
+				}
+			}
+		}
+		custom_tooltip = ef_settings.tt.theology
+		ef_cycle_theology_cfg_effect = yes
+		trigger_event = ef_settings.1001
+	}
+
+	option = {
+		name = {
+			text = {
+				first_valid = {
+					triggered_desc = {
+						trigger = { var:ef_cfg_fulfillment = 1 }
+						desc = ef_settings.opt.fulfillment_1
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_fulfillment = 2 }
+						desc = ef_settings.opt.fulfillment_2
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_fulfillment = 3 }
+						desc = ef_settings.opt.fulfillment_3
+					}
+					desc = ef_settings.opt.fulfillment_2
+				}
+			}
+		}
+		trigger = {
+			ef_bga_features_active = yes
+		}
+		custom_tooltip = ef_settings.tt.fulfillment
+		ef_cycle_fulfillment_cfg_effect = yes
+		trigger_event = ef_settings.1001
+	}
+
+	option = {
+		name = ef_settings.1001.close
+		custom_tooltip = ef_settings.tt.close
+	}
+}

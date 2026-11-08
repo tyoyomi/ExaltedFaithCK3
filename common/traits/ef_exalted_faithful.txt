@@ -1,0 +1,32 @@
+# Exalted Faith — baseline identity (tiered piety/influence/theology/BGA live on modifiers)
+
+@ef_learning_base = 15
+@ef_other_skill = 15
+@ef_monthly_prestige = 2
+@ef_monthly_income = 5
+@ef_health = 5
+@ef_general_opinion = 25
+@ef_stress_gain_mult = -0.2
+
+ef_exalted_faithful = {
+	category = fame
+	random_creation = 0
+	genetic = no
+	immortal = no
+	good = yes
+	shown_in_ruler_designer = yes
+
+	learning = @ef_learning_base
+	diplomacy = @ef_other_skill
+	martial = @ef_other_skill
+	stewardship = @ef_other_skill
+	intrigue = @ef_other_skill
+	prowess = @ef_other_skill
+
+	monthly_prestige = @ef_monthly_prestige
+	monthly_income = @ef_monthly_income
+
+	health = @ef_health
+	general_opinion = @ef_general_opinion
+	stress_gain_mult = @ef_stress_gain_mult
+}

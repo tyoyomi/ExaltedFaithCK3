@@ -1,0 +1,111 @@
+# Exalted Faith — append-only vanilla hooks (never overwrite effect/trigger on vanilla roots)
+
+on_leave_court = {
+	on_actions = { ef_on_leave_court }
+}
+
+ef_on_leave_court = {
+	trigger = {
+		has_trait = ef_exalted_faithful
+	}
+	effect = {
+		ef_evaluate_strip_exalted_faithful_effect = yes
+	}
+}
+
+on_join_court = {
+	on_actions = { ef_on_join_court }
+}
+
+ef_on_join_court = {
+	trigger = {
+		has_trait = ef_exalted_faithful
+	}
+	effect = {
+		ef_evaluate_strip_exalted_faithful_effect = yes
+		ef_refresh_faithful_modifiers_effect = yes
+	}
+}
+
+on_title_lost = {
+	on_actions = { ef_on_title_lost }
+}
+
+ef_on_title_lost = {
+	trigger = {
+		OR = {
+			has_trait = ef_exalted_faithful
+			any_living_character = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+		}
+	}
+	effect = {
+		if = {
+			limit = { has_trait = ef_exalted_faithful }
+			ef_evaluate_strip_exalted_faithful_effect = yes
+		}
+		every_living_character = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+			ef_evaluate_strip_exalted_faithful_effect = yes
+		}
+	}
+}
+
+random_yearly_everyone_pulse = {
+	on_actions = { ef_yearly_realm_faith_check }
+}
+
+ef_yearly_realm_faith_check = {
+	trigger = {
+		has_trait = ef_exalted_faithful
+	}
+	effect = {
+		ef_evaluate_strip_exalted_faithful_effect = yes
+		ef_refresh_faithful_modifiers_effect = yes
+	}
+}
+
+on_faith_conversion = {
+	on_actions = { ef_on_faith_conversion }
+}
+
+ef_on_faith_conversion = {
+	trigger = {
+		has_trait = ef_exalted_faithful
+	}
+	effect = {
+		ef_evaluate_strip_exalted_faithful_effect = yes
+	}
+}
+
+on_death = {
+	on_actions = { ef_on_death }
+}
+
+ef_on_death = {
+	effect = {
+		# Dying patron: rebind or strip faithful
+		if = {
+			limit = {
+				any_living_character = {
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = root
+				}
+			}
+			ef_on_patron_death_effect = yes
+		}
+		# Dying holder cleanup
+		if = {
+			limit = { has_trait = ef_exalted_faithful }
+			ef_on_holder_death_cleanup_effect = yes
+		}
+	}
+}

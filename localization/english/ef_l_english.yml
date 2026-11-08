@@ -1,0 +1,185 @@
+﻿l_english:
+ # Trait
+ trait_ef_exalted_faithful:0 "Exalted Faithful"
+ trait_ef_exalted_faithful_desc:0 "Favored by God and their patron's faith — steeped in piety, Learning, and the pull of the clergy. Clearly beneath a Supreme Sovereign, and faith-weighted rather than a pocket emperor."
+
+ # Interactions
+ ef_bestow_exalted_faithful_interaction:0 "Bestow Exalted Faithful"
+ ef_bestow_exalted_faithful_interaction_desc:0 "Elevate [recipient.GetShortUIName] as an Exalted Faithful of your faith and realm. The honor lasts while they remain bound to you — and, by default, to your faith."
+ ef_bestow_exalted_faithful_interaction_extra_icon:0 "$ef_bestow_exalted_faithful_interaction$"
+
+ ef_revoke_exalted_faithful_interaction:0 "Revoke Exalted Faithful"
+ ef_revoke_exalted_faithful_interaction_desc:0 "Strip [recipient.GetShortUIName] of the Exalted Faithful honor. They keep their life and station, but not this sacred favor."
+
+ # Decisions
+ ef_manage_exalted_faith_decision:0 "Manage Exalted Faith"
+ ef_manage_exalted_faith_decision_desc:0 "Review your Exalted Faithful and the faith-package tiers that empower them. Bestow and revoke are character interactions; this opens the settings hub."
+ ef_manage_exalted_faith_decision_tooltip:0 "Open the Exalted Faith hub: holders and live piety / influence / theology tiers"
+ ef_manage_exalted_faith_decision_confirm:0 "Open Hub"
+ ef_manage_exalted_faith_decision_effect_tt:0 "Opens the Exalted Faith manage hub"
+
+ # Modifiers
+ ef_piety_low_modifier:0 "Exalted Faith — Piety (Low)"
+ ef_piety_low_modifier_desc:0 "A modest monthly piety flood from sacred favor."
+ ef_piety_mid_modifier:0 "Exalted Faith — Piety (Mid)"
+ ef_piety_mid_modifier_desc:0 "A strong monthly piety flood from sacred favor."
+ ef_piety_high_modifier:0 "Exalted Faith — Piety (High)"
+ ef_piety_high_modifier_desc:0 "A great monthly piety flood from sacred favor — still far below Sovereign scale."
+
+ ef_influence_low_modifier:0 "Exalted Faith — Influence (Low)"
+ ef_influence_low_modifier_desc:0 "Mild same-faith, clergy, and zealot regard, plus slightly cheaper personal conversion."
+ ef_influence_mid_modifier:0 "Exalted Faith — Influence (Mid)"
+ ef_influence_mid_modifier_desc:0 "Strong same-faith, clergy, and zealot regard, plus cheaper personal conversion."
+ ef_influence_high_modifier:0 "Exalted Faith — Influence (High)"
+ ef_influence_high_modifier_desc:0 "Great same-faith, clergy, and zealot regard, plus much cheaper personal conversion."
+
+ ef_theology_low_modifier:0 "Exalted Faith — Theology (Low)"
+ ef_theology_low_modifier_desc:0 "Extra Learning and Learning lifestyle experience."
+ ef_theology_mid_modifier:0 "Exalted Faith — Theology (Mid)"
+ ef_theology_mid_modifier_desc:0 "Notable Learning and Learning lifestyle experience."
+ ef_theology_high_modifier:0 "Exalted Faith — Theology (High)"
+ ef_theology_high_modifier_desc:0 "Exceptional Learning and Learning lifestyle experience."
+
+ ef_fulfillment_low_modifier:0 "Exalted Faith — Fulfillment Comfort (Low)"
+ ef_fulfillment_low_modifier_desc:0 "Mild spiritual fulfillment comfort (By God Alone)."
+ ef_fulfillment_mid_modifier:0 "Exalted Faith — Fulfillment Comfort (Mid)"
+ ef_fulfillment_mid_modifier_desc:0 "Steady spiritual fulfillment comfort (By God Alone)."
+ ef_fulfillment_high_modifier:0 "Exalted Faith — Fulfillment Comfort (High)"
+ ef_fulfillment_high_modifier_desc:0 "Strong spiritual fulfillment comfort (By God Alone)."
+
+ # Tooltips
+ ef_tt_under_faithful_cap:0 "You are under your Exalted Faithful cap"
+ ef_tt_blocks_with_sovereign:0 "Cannot stack with Supreme Sovereign"
+ ef_tt_actor_may_bestow:0 "You may bestow Exalted Faithful"
+ ef_tt_can_receive_exalted_faithful:0 "Target may receive Exalted Faithful"
+ ef_tt_is_your_exalted_faithful:0 "This is your Exalted Faithful"
+
+ # Game rules
+ rule_ef_rule_granting:0 "Exalted Faith: Who May Bestow"
+ setting_ef_rule_granting_player_only:0 "Player Only"
+ setting_ef_rule_granting_player_only_desc:0 "Only human players may bestow the Exalted Faithful honor."
+ setting_ef_rule_granting_player_and_ai:0 "#high Player and AI#!"
+ setting_ef_rule_granting_player_and_ai_desc:0 "Players and AI rulers may bestow the honor. AI prefers court chaplains, learned courtiers, and same-faith targets."
+ setting_ef_rule_granting_disabled:0 "Disabled"
+ setting_ef_rule_granting_disabled_desc:0 "Bestowing is disabled. Existing holders are unaffected until revoked or stripped."
+
+ rule_ef_rule_max_faithful:0 "Exalted Faith: Maximum per Patron"
+ setting_ef_rule_max_faithful_1:0 "1"
+ setting_ef_rule_max_faithful_1_desc:0 "Each patron may have at most one Exalted Faithful at a time."
+ setting_ef_rule_max_faithful_3:0 "3"
+ setting_ef_rule_max_faithful_3_desc:0 "Each patron may have up to three Exalted Faithful at a time."
+ setting_ef_rule_max_faithful_5:0 "5"
+ setting_ef_rule_max_faithful_5_desc:0 "Each patron may have up to five Exalted Faithful at a time."
+ setting_ef_rule_max_faithful_unlimited:0 "#high Unlimited#!"
+ setting_ef_rule_max_faithful_unlimited_desc:0 "No cap on concurrent Exalted Faithful per patron."
+
+ rule_ef_rule_strip_on_leave:0 "Exalted Faith: Strip on Leaving Realm"
+ setting_ef_rule_strip_on_leave_on:0 "On"
+ setting_ef_rule_strip_on_leave_on_desc:0 "Exalted Faithful status is removed when the holder leaves the patron's realm."
+ setting_ef_rule_strip_on_leave_off:0 "Off"
+ setting_ef_rule_strip_on_leave_off_desc:0 "Leaving the realm does not auto-strip the honor. Manual revoke still works."
+
+ rule_ef_rule_strip_on_faith_exit:0 "Exalted Faith: Strip on Leaving Faith"
+ setting_ef_rule_strip_on_faith_exit_on:0 "On"
+ setting_ef_rule_strip_on_faith_exit_on_desc:0 "Exalted Faithful status is removed when the holder leaves the patron's faith."
+ setting_ef_rule_strip_on_faith_exit_off:0 "Off"
+ setting_ef_rule_strip_on_faith_exit_off_desc:0 "Changing faith does not auto-strip the honor."
+
+ rule_ef_rule_mutual_exclusion:0 "Exalted Faith: Supreme Sovereign Exclusion"
+ setting_ef_rule_mutual_exclusion_block_with_sovereign:0 "Block with Supreme Sovereign"
+ setting_ef_rule_mutual_exclusion_block_with_sovereign_desc:0 "Characters with Supreme Sovereign cannot receive Exalted Faithful. Gaining Sovereign later strips Faithful."
+ setting_ef_rule_mutual_exclusion_allow_both:0 "Allow Both"
+ setting_ef_rule_mutual_exclusion_allow_both_desc:0 "Exalted Faithful and Supreme Sovereign may stack on the same character."
+
+ rule_ef_rule_self_grant:0 "Exalted Faith: Self Grant"
+ setting_ef_rule_self_grant_no:0 "No"
+ setting_ef_rule_self_grant_no_desc:0 "You cannot bestow Exalted Faithful on yourself via interaction. Ruler Designer can still apply the trait."
+ setting_ef_rule_self_grant_yes:0 "Yes"
+ setting_ef_rule_self_grant_yes_desc:0 "You may bestow Exalted Faithful on yourself."
+
+ rule_ef_rule_piety_tier:0 "Exalted Faith: Starting Piety Tier"
+ setting_ef_rule_piety_tier_low:0 "Low"
+ setting_ef_rule_piety_tier_low_desc:0 "New patrons start with Low piety faucet (+15/month). Hub can still cycle mid-campaign."
+ setting_ef_rule_piety_tier_mid:0 "Mid"
+ setting_ef_rule_piety_tier_mid_desc:0 "New patrons start with Mid piety faucet (+35/month). Hub can still cycle mid-campaign."
+ setting_ef_rule_piety_tier_high:0 "High"
+ setting_ef_rule_piety_tier_high_desc:0 "New patrons start with High piety faucet (+60/month). Hub can still cycle mid-campaign."
+
+ rule_ef_rule_bga_mode:0 "Exalted Faith: By God Alone Mode"
+ setting_ef_rule_bga_mode_auto:0 "Auto"
+ setting_ef_rule_bga_mode_auto_desc:0 "Apply spiritual fulfillment comfort when By God Alone is present."
+ setting_ef_rule_bga_mode_force_core_only:0 "Core Only"
+ setting_ef_rule_bga_mode_force_core_only_desc:0 "Never apply By God Alone extras, even if the DLC is owned (debug / balance)."
+
+ # Notify events
+ ef_events.1001.t:0 "An Exalted Faithful Appointed"
+ ef_events.1001.desc:0 "You have elevated a trusted soul as Exalted Faithful. Their piety and Learning will serve your faith — so long as they remain bound to you."
+ ef_events.1001.a:0 "Blessed be."
+
+ ef_events.1002.t:0 "Exalted Faithful"
+ ef_events.1002.desc:0 "Your patron has named you Exalted Faithful. The favor of God feels near — and tied to remaining in their realm and faith."
+ ef_events.1002.a:0 "I will prove worthy."
+
+ ef_events.1101.t:0 "Exalted Faithful Revoked"
+ ef_events.1101.desc:0 "You have deliberately stripped the Exalted Faithful honor from one of your people."
+ ef_events.1101.a:0 "So be it."
+
+ ef_events.1201.t:0 "Faithful Favor Lapsed"
+ ef_events.1201.desc:0 "An Exalted Faithful left your realm. Their sacred favor has ended."
+ ef_events.1201.a:0 "A pity."
+
+ ef_events.1202.t:0 "Exaltation Ended"
+ ef_events.1202.desc:0 "Having left your patron's realm, you are no longer Exalted Faithful."
+ ef_events.1202.a:0 "The light fades."
+
+ ef_events.1211.t:0 "Faith Broken"
+ ef_events.1211.desc:0 "An Exalted Faithful abandoned your faith. Their sacred favor has been stripped."
+ ef_events.1211.a:0 "Apostasy has a price."
+
+ ef_events.1212.t:0 "Favor Withdrawn"
+ ef_events.1212.desc:0 "Having left your patron's faith, you are no longer Exalted Faithful."
+ ef_events.1212.a:0 "So ends the covenant."
+
+ # Settings hub
+ ef_settings.1001.t:0 "Exalted Faith"
+ ef_settings.1001.desc_intro:0 "Your Exalted Faithful and the faith-package tiers that empower them. Cycle a setting to change it; the board refreshes after each click. Bestow and revoke stay on character interactions."
+ ef_settings.1001.desc_blank:0 "\n"
+ ef_settings.1001.desc_holders:0 "Holders under you: one or more Exalted Faithful are currently bound to you."
+ ef_settings.1001.desc_holders_none:0 "Holders under you: none. Use Bestow Exalted Faithful on a character."
+ ef_settings.1001.desc_footer:0 "Recommended with By God Alone for full spiritual-fulfillment comfort; the core piety and faith package works without it."
+ ef_settings.1001.close:0 "Done"
+
+ ef_settings.tt.piety:0 "Piety faucet — monthly piety on each of your Exalted Faithful.\n\nLow (1): +15 / month.\nMid (2): +35 / month.\nHigh (3): +60 / month.\n\nClick to cycle Low → Mid → High → Low. Current tier is on the button."
+ ef_settings.tt.influence:0 "Faith influence — same-faith, clergy, and zealot opinion, plus cheaper personal faith conversion.\n\nLow / Mid / High scale the package.\n\nClick to cycle. Current tier is on the button."
+ ef_settings.tt.theology:0 "Theology — extra Learning and Learning lifestyle XP on each Exalted Faithful.\n\nLow / Mid / High scale the package (Mid reaches ~35 Learning with the trait baseline).\n\nClick to cycle. Current tier is on the button."
+ ef_settings.tt.fulfillment:0 "Fulfillment comfort — spiritual fulfillment gain/loss multipliers (By God Alone only).\n\nLow / Mid / High scale comfort.\n\nClick to cycle. Current tier is on the button."
+ ef_settings.tt.close:0 "Close the Exalted Faith hub without changing anything."
+
+ ef_settings.tier.piety_1:0 "Piety: Low (1) — +15/month"
+ ef_settings.tier.piety_2:0 "Piety: Mid (2) — +35/month"
+ ef_settings.tier.piety_3:0 "Piety: High (3) — +60/month"
+ ef_settings.opt.piety_1:0 "Piety: Low (1) — cycle"
+ ef_settings.opt.piety_2:0 "Piety: Mid (2) — cycle"
+ ef_settings.opt.piety_3:0 "Piety: High (3) — cycle"
+
+ ef_settings.tier.influence_1:0 "Faith Influence: Low (1)"
+ ef_settings.tier.influence_2:0 "Faith Influence: Mid (2)"
+ ef_settings.tier.influence_3:0 "Faith Influence: High (3)"
+ ef_settings.opt.influence_1:0 "Faith Influence: Low (1) — cycle"
+ ef_settings.opt.influence_2:0 "Faith Influence: Mid (2) — cycle"
+ ef_settings.opt.influence_3:0 "Faith Influence: High (3) — cycle"
+
+ ef_settings.tier.theology_1:0 "Theology: Low (1)"
+ ef_settings.tier.theology_2:0 "Theology: Mid (2)"
+ ef_settings.tier.theology_3:0 "Theology: High (3)"
+ ef_settings.opt.theology_1:0 "Theology: Low (1) — cycle"
+ ef_settings.opt.theology_2:0 "Theology: Mid (2) — cycle"
+ ef_settings.opt.theology_3:0 "Theology: High (3) — cycle"
+
+ ef_settings.tier.fulfillment_1:0 "Fulfillment Comfort: Low (1)"
+ ef_settings.tier.fulfillment_2:0 "Fulfillment Comfort: Mid (2)"
+ ef_settings.tier.fulfillment_3:0 "Fulfillment Comfort: High (3)"
+ ef_settings.tier.fulfillment_off:0 "Fulfillment Comfort: unavailable (needs By God Alone; Core Only disables it)"
+ ef_settings.opt.fulfillment_1:0 "Fulfillment Comfort: Low (1) — cycle"
+ ef_settings.opt.fulfillment_2:0 "Fulfillment Comfort: Mid (2) — cycle"
+ ef_settings.opt.fulfillment_3:0 "Fulfillment Comfort: High (3) — cycle"

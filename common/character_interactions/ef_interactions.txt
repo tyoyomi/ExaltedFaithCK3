@@ -1,0 +1,167 @@
+ef_bestow_exalted_faithful_interaction = {
+	category = interaction_category_friendly
+	icon = religious
+	interface_priority = 60
+	common_interaction = yes
+
+	desc = ef_bestow_exalted_faithful_interaction_desc
+
+	auto_accept = yes
+
+	is_shown = {
+		NOT = { has_game_rule = ef_rule_granting_disabled }
+		scope:actor = {
+			is_alive = yes
+			ef_actor_may_bestow_by_rule = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			NOT = { has_trait = ef_exalted_faithful }
+		}
+		OR = {
+			AND = {
+				has_game_rule = ef_rule_self_grant_yes
+				scope:actor = scope:recipient
+			}
+			scope:actor != scope:recipient
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			custom_tooltip = {
+				text = ef_tt_actor_may_bestow
+				ef_can_actor_bestow = yes
+			}
+		}
+		scope:recipient = {
+			custom_tooltip = {
+				text = ef_tt_can_receive_exalted_faithful
+				ef_can_receive_exalted_faithful = yes
+			}
+		}
+	}
+
+	on_accept = {
+		scope:actor = { save_scope_as = ef_patron }
+		scope:recipient = {
+			ef_bestow_exalted_faithful_effect = yes
+		}
+	}
+
+	ai_targets = {
+		ai_recipients = courtiers
+		chance = 0.1
+	}
+	ai_targets = {
+		ai_recipients = vassals
+		chance = 0.05
+	}
+	ai_target_quick_trigger = {
+		adult = yes
+	}
+	ai_frequency = 120
+
+	ai_potential = {
+		has_game_rule = ef_rule_granting_player_and_ai
+		ef_patron_under_faithful_cap = yes
+	}
+
+	ai_will_do = {
+		base = 0
+		modifier = {
+			add = 30
+			scope:recipient = {
+				has_council_position = councillor_court_chaplain
+			}
+		}
+		modifier = {
+			add = 15
+			scope:recipient = {
+				learning >= 15
+			}
+		}
+		modifier = {
+			add = 10
+			scope:actor = {
+				opinion = {
+					target = scope:recipient
+					value >= 50
+				}
+			}
+		}
+		modifier = {
+			add = 10
+			scope:recipient = {
+				faith = scope:actor.faith
+			}
+		}
+		modifier = {
+			add = -100
+			AND = {
+				has_game_rule = ef_rule_mutual_exclusion_block_with_sovereign
+				scope:recipient = {
+					ef_character_is_supreme_sovereign = yes
+				}
+			}
+		}
+	}
+}
+
+ef_revoke_exalted_faithful_interaction = {
+	category = interaction_category_hostile
+	icon = scroll_scales
+	interface_priority = 59
+	common_interaction = yes
+
+	desc = ef_revoke_exalted_faithful_interaction_desc
+
+	auto_accept = yes
+
+	is_shown = {
+		scope:actor = {
+			is_alive = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			has_trait = ef_exalted_faithful
+			exists = var:ef_patron
+			var:ef_patron = scope:actor
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			custom_tooltip = {
+				text = ef_tt_is_your_exalted_faithful
+				ef_actor_is_patron_of_recipient = yes
+			}
+		}
+	}
+
+	on_accept = {
+		scope:actor = { save_scope_as = ef_patron }
+		scope:recipient = {
+			ef_revoke_exalted_faithful_effect = yes
+		}
+	}
+
+	ai_targets = {
+		ai_recipients = courtiers
+		chance = 0.05
+	}
+	ai_targets = {
+		ai_recipients = vassals
+		chance = 0.05
+	}
+	ai_frequency = 240
+
+	ai_potential = {
+		has_game_rule = ef_rule_granting_player_and_ai
+		always = no # AI does not casually revoke in v1
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

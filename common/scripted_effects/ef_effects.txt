@@ -1,0 +1,476 @@
+# Exalted Faith — scripted effects
+# Bestow/revoke expect this = recipient and scope:ef_patron = granter (or actor for revoke notify).
+
+### Modifier clear / refresh (this = faithful; reads cfg from living patron)
+ef_clear_faithful_modifiers_effect = {
+	remove_character_modifier = ef_piety_low_modifier
+	remove_character_modifier = ef_piety_mid_modifier
+	remove_character_modifier = ef_piety_high_modifier
+	remove_character_modifier = ef_influence_low_modifier
+	remove_character_modifier = ef_influence_mid_modifier
+	remove_character_modifier = ef_influence_high_modifier
+	remove_character_modifier = ef_theology_low_modifier
+	remove_character_modifier = ef_theology_mid_modifier
+	remove_character_modifier = ef_theology_high_modifier
+	remove_character_modifier = ef_fulfillment_low_modifier
+	remove_character_modifier = ef_fulfillment_mid_modifier
+	remove_character_modifier = ef_fulfillment_high_modifier
+}
+
+# this = patron (or any character holding hub cfg vars)
+ef_ensure_faithful_defaults_effect = {
+	if = {
+		limit = { NOT = { exists = var:ef_cfg_piety } }
+		if = {
+			limit = { has_game_rule = ef_rule_piety_tier_low }
+			set_variable = { name = ef_cfg_piety value = 1 }
+		}
+		else_if = {
+			limit = { has_game_rule = ef_rule_piety_tier_high }
+			set_variable = { name = ef_cfg_piety value = 3 }
+		}
+		else = {
+			set_variable = { name = ef_cfg_piety value = 2 }
+		}
+	}
+	if = {
+		limit = { NOT = { exists = var:ef_cfg_influence } }
+		set_variable = { name = ef_cfg_influence value = 2 }
+	}
+	if = {
+		limit = { NOT = { exists = var:ef_cfg_theology } }
+		set_variable = { name = ef_cfg_theology value = 2 }
+	}
+	if = {
+		limit = { NOT = { exists = var:ef_cfg_fulfillment } }
+		set_variable = { name = ef_cfg_fulfillment value = 2 }
+	}
+}
+
+ef_refresh_faithful_modifiers_effect = {
+	# this = faithful
+	ef_clear_faithful_modifiers_effect = yes
+	if = {
+		limit = {
+			has_trait = ef_exalted_faithful
+			exists = var:ef_patron
+			var:ef_patron = { is_alive = yes }
+		}
+		var:ef_patron = {
+			ef_ensure_faithful_defaults_effect = yes
+			save_scope_as = ef_cfg_source
+		}
+
+		# Piety
+		if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_piety = 1 } }
+			add_character_modifier = {
+				modifier = ef_piety_low_modifier
+				days = -1
+			}
+		}
+		else_if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_piety = 3 } }
+			add_character_modifier = {
+				modifier = ef_piety_high_modifier
+				days = -1
+			}
+		}
+		else = {
+			add_character_modifier = {
+				modifier = ef_piety_mid_modifier
+				days = -1
+			}
+		}
+
+		# Influence
+		if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_influence = 1 } }
+			add_character_modifier = {
+				modifier = ef_influence_low_modifier
+				days = -1
+			}
+		}
+		else_if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_influence = 3 } }
+			add_character_modifier = {
+				modifier = ef_influence_high_modifier
+				days = -1
+			}
+		}
+		else = {
+			add_character_modifier = {
+				modifier = ef_influence_mid_modifier
+				days = -1
+			}
+		}
+
+		# Theology
+		if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_theology = 1 } }
+			add_character_modifier = {
+				modifier = ef_theology_low_modifier
+				days = -1
+			}
+		}
+		else_if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_theology = 3 } }
+			add_character_modifier = {
+				modifier = ef_theology_high_modifier
+				days = -1
+			}
+		}
+		else = {
+			add_character_modifier = {
+				modifier = ef_theology_mid_modifier
+				days = -1
+			}
+		}
+
+		# BGA fulfillment — only when DLC active and not force_core_only
+		if = {
+			limit = { ef_bga_features_active = yes }
+			if = {
+				limit = { scope:ef_cfg_source = { var:ef_cfg_fulfillment = 1 } }
+				add_character_modifier = {
+					modifier = ef_fulfillment_low_modifier
+					days = -1
+				}
+			}
+			else_if = {
+				limit = { scope:ef_cfg_source = { var:ef_cfg_fulfillment = 3 } }
+				add_character_modifier = {
+					modifier = ef_fulfillment_high_modifier
+					days = -1
+				}
+			}
+			else = {
+				add_character_modifier = {
+					modifier = ef_fulfillment_mid_modifier
+					days = -1
+				}
+			}
+		}
+	}
+}
+
+# this = patron — refresh every bound faithful
+ef_refresh_all_faithful_for_patron_effect = {
+	save_scope_as = ef_refresh_patron
+	every_living_character = {
+		limit = {
+			has_trait = ef_exalted_faithful
+			exists = var:ef_patron
+			var:ef_patron = scope:ef_refresh_patron
+		}
+		ef_refresh_faithful_modifiers_effect = yes
+	}
+}
+
+### Cycle helpers — this = patron (hub root)
+ef_cycle_piety_cfg_effect = {
+	ef_ensure_faithful_defaults_effect = yes
+	if = {
+		limit = { var:ef_cfg_piety = 1 }
+		set_variable = { name = ef_cfg_piety value = 2 }
+	}
+	else_if = {
+		limit = { var:ef_cfg_piety = 2 }
+		set_variable = { name = ef_cfg_piety value = 3 }
+	}
+	else = {
+		set_variable = { name = ef_cfg_piety value = 1 }
+	}
+	ef_refresh_all_faithful_for_patron_effect = yes
+}
+
+ef_cycle_influence_cfg_effect = {
+	ef_ensure_faithful_defaults_effect = yes
+	if = {
+		limit = { var:ef_cfg_influence = 1 }
+		set_variable = { name = ef_cfg_influence value = 2 }
+	}
+	else_if = {
+		limit = { var:ef_cfg_influence = 2 }
+		set_variable = { name = ef_cfg_influence value = 3 }
+	}
+	else = {
+		set_variable = { name = ef_cfg_influence value = 1 }
+	}
+	ef_refresh_all_faithful_for_patron_effect = yes
+}
+
+ef_cycle_theology_cfg_effect = {
+	ef_ensure_faithful_defaults_effect = yes
+	if = {
+		limit = { var:ef_cfg_theology = 1 }
+		set_variable = { name = ef_cfg_theology value = 2 }
+	}
+	else_if = {
+		limit = { var:ef_cfg_theology = 2 }
+		set_variable = { name = ef_cfg_theology value = 3 }
+	}
+	else = {
+		set_variable = { name = ef_cfg_theology value = 1 }
+	}
+	ef_refresh_all_faithful_for_patron_effect = yes
+}
+
+ef_cycle_fulfillment_cfg_effect = {
+	ef_ensure_faithful_defaults_effect = yes
+	if = {
+		limit = { var:ef_cfg_fulfillment = 1 }
+		set_variable = { name = ef_cfg_fulfillment value = 2 }
+	}
+	else_if = {
+		limit = { var:ef_cfg_fulfillment = 2 }
+		set_variable = { name = ef_cfg_fulfillment value = 3 }
+	}
+	else = {
+		set_variable = { name = ef_cfg_fulfillment value = 1 }
+	}
+	ef_refresh_all_faithful_for_patron_effect = yes
+}
+
+### Strip / revoke / bestow
+ef_strip_exalted_faithful_effect = {
+	if = {
+		limit = { has_trait = ef_exalted_faithful }
+		if = {
+			limit = {
+				exists = var:ef_patron
+				var:ef_patron = { is_alive = yes }
+			}
+			var:ef_patron = {
+				save_scope_as = ef_notify_patron
+			}
+		}
+		save_scope_as = ef_former_faithful
+		# Faith-exit flavor vs realm-lapse
+		if = {
+			limit = {
+				exists = scope:ef_notify_patron
+				scope:ef_notify_patron = { is_ai = no }
+			}
+			if = {
+				limit = { has_character_flag = ef_strip_reason_faith }
+				scope:ef_notify_patron = {
+					trigger_event = ef_events.1211
+				}
+			}
+			else = {
+				scope:ef_notify_patron = {
+					trigger_event = ef_events.1201
+				}
+			}
+		}
+		if = {
+			limit = { is_ai = no }
+			if = {
+				limit = { has_character_flag = ef_strip_reason_faith }
+				trigger_event = ef_events.1212
+			}
+			else = {
+				trigger_event = ef_events.1202
+			}
+		}
+		ef_clear_faithful_modifiers_effect = yes
+		remove_trait = ef_exalted_faithful
+		remove_variable = ef_patron
+		remove_character_flag = ef_is_exalted
+		remove_character_flag = ef_strip_reason_faith
+	}
+}
+
+ef_evaluate_strip_exalted_faithful_effect = {
+	# Sovereign outranks EF when exclusion is on
+	if = {
+		limit = {
+			has_trait = ef_exalted_faithful
+			has_game_rule = ef_rule_mutual_exclusion_block_with_sovereign
+			ef_character_is_supreme_sovereign = yes
+		}
+		remove_character_flag = ef_strip_reason_faith
+		ef_strip_exalted_faithful_effect = yes
+	}
+	# Faith exit takes precedence for flavor when both true
+	else_if = {
+		limit = { ef_should_strip_for_faith = yes }
+		add_character_flag = ef_strip_reason_faith
+		ef_strip_exalted_faithful_effect = yes
+	}
+	else_if = {
+		limit = { ef_should_strip_for_realm = yes }
+		remove_character_flag = ef_strip_reason_faith
+		ef_strip_exalted_faithful_effect = yes
+	}
+}
+
+ef_bestow_exalted_faithful_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			NOT = { has_trait = ef_exalted_faithful }
+		}
+		save_scope_as = ef_new_faithful
+		add_trait = ef_exalted_faithful
+		if = {
+			limit = { exists = scope:ef_patron }
+			set_variable = {
+				name = ef_patron
+				value = scope:ef_patron
+			}
+		}
+		else_if = {
+			limit = { exists = scope:actor }
+			set_variable = {
+				name = ef_patron
+				value = scope:actor
+			}
+			scope:actor = { save_scope_as = ef_patron }
+		}
+		add_character_flag = ef_is_exalted
+		if = {
+			limit = {
+				exists = var:ef_patron
+				var:ef_patron = { is_alive = yes }
+			}
+			var:ef_patron = {
+				ef_ensure_faithful_defaults_effect = yes
+			}
+		}
+		ef_refresh_faithful_modifiers_effect = yes
+		# Optional BGA bestow pulse (gated)
+		if = {
+			limit = { ef_bga_features_active = yes }
+			change_spiritual_fulfillment = minor_spiritual_fulfillment_value
+		}
+		# Notify granter
+		if = {
+			limit = {
+				exists = var:ef_patron
+				var:ef_patron = { is_alive = yes is_ai = no }
+			}
+			var:ef_patron = {
+				trigger_event = ef_events.1001
+			}
+		}
+		# Notify recipient (if player and not same as patron)
+		if = {
+			limit = {
+				is_ai = no
+				trigger_if = {
+					limit = { exists = var:ef_patron }
+					this != var:ef_patron
+				}
+			}
+			trigger_event = ef_events.1002
+		}
+	}
+}
+
+ef_revoke_exalted_faithful_effect = {
+	if = {
+		limit = { has_trait = ef_exalted_faithful }
+		if = {
+			limit = {
+				exists = var:ef_patron
+				var:ef_patron = { is_alive = yes }
+			}
+			var:ef_patron = {
+				save_scope_as = ef_notify_patron
+			}
+		}
+		save_scope_as = ef_former_faithful
+		ef_clear_faithful_modifiers_effect = yes
+		if = {
+			limit = {
+				exists = scope:ef_notify_patron
+				scope:ef_notify_patron = { is_ai = no }
+			}
+			scope:ef_notify_patron = {
+				trigger_event = ef_events.1101
+			}
+		}
+		remove_trait = ef_exalted_faithful
+		remove_variable = ef_patron
+		remove_character_flag = ef_is_exalted
+		remove_character_flag = ef_strip_reason_faith
+	}
+}
+
+# Patron died: rebind to player_heir / primary_heir when realm continuity holds; else strip
+ef_on_patron_death_effect = {
+	# this = dying patron
+	save_scope_as = ef_dying_patron
+	if = {
+		limit = {
+			exists = player_heir
+			player_heir = { is_alive = yes }
+		}
+		player_heir = { save_scope_as = ef_heir_patron }
+	}
+	else_if = {
+		limit = {
+			exists = primary_heir
+			primary_heir = { is_alive = yes }
+		}
+		primary_heir = { save_scope_as = ef_heir_patron }
+	}
+	every_living_character = {
+		limit = {
+			has_trait = ef_exalted_faithful
+			exists = var:ef_patron
+			var:ef_patron = scope:ef_dying_patron
+		}
+		if = {
+			limit = {
+				exists = scope:ef_heir_patron
+			}
+			set_variable = {
+				name = ef_patron
+				value = scope:ef_heir_patron
+			}
+			if = {
+				limit = { ef_in_patron_realm = yes }
+				# Copy cfg from dying patron if heir lacks vars
+				scope:ef_heir_patron = {
+					ef_ensure_faithful_defaults_effect = yes
+				}
+				ef_refresh_faithful_modifiers_effect = yes
+			}
+			else = {
+				set_variable = {
+					name = ef_patron
+					value = scope:ef_dying_patron
+				}
+				remove_character_flag = ef_strip_reason_faith
+				ef_strip_exalted_faithful_effect = yes
+			}
+		}
+		else = {
+			remove_character_flag = ef_strip_reason_faith
+			ef_strip_exalted_faithful_effect = yes
+		}
+	}
+	# Heir gets ensure-defaults on rebind refresh; live hub tiers re-set via Manage hub if needed
+	if = {
+		limit = {
+			exists = scope:ef_heir_patron
+			scope:ef_heir_patron = { is_alive = yes }
+		}
+		scope:ef_heir_patron = {
+			ef_ensure_faithful_defaults_effect = yes
+		}
+	}
+}
+
+ef_on_holder_death_cleanup_effect = {
+	if = {
+		limit = { has_trait = ef_exalted_faithful }
+		ef_clear_faithful_modifiers_effect = yes
+		remove_variable = ef_patron
+		remove_character_flag = ef_is_exalted
+		remove_character_flag = ef_strip_reason_faith
+	}
+}

@@ -1,0 +1,85 @@
+namespace = ef_events
+
+# Granter: successfully bestowed
+ef_events.1001 = {
+	type = character_event
+	title = ef_events.1001.t
+	desc = ef_events.1001.desc
+	theme = faith
+
+	option = {
+		name = ef_events.1001.a
+	}
+}
+
+# Recipient: you were exalted
+ef_events.1002 = {
+	type = character_event
+	title = ef_events.1002.t
+	desc = ef_events.1002.desc
+	theme = faith
+
+	option = {
+		name = ef_events.1002.a
+	}
+}
+
+# Granter: manually revoked
+ef_events.1101 = {
+	type = character_event
+	title = ef_events.1101.t
+	desc = ef_events.1101.desc
+	theme = faith
+
+	option = {
+		name = ef_events.1101.a
+	}
+}
+
+# Granter: status stripped — left realm
+ef_events.1201 = {
+	type = character_event
+	title = ef_events.1201.t
+	desc = ef_events.1201.desc
+	theme = faith
+
+	option = {
+		name = ef_events.1201.a
+	}
+}
+
+# Former holder: exaltation ended (realm)
+ef_events.1202 = {
+	type = character_event
+	title = ef_events.1202.t
+	desc = ef_events.1202.desc
+	theme = faith
+
+	option = {
+		name = ef_events.1202.a
+	}
+}
+
+# Granter: status stripped — left faith
+ef_events.1211 = {
+	type = character_event
+	title = ef_events.1211.t
+	desc = ef_events.1211.desc
+	theme = faith
+
+	option = {
+		name = ef_events.1211.a
+	}
+}
+
+# Former holder: exaltation ended (faith)
+ef_events.1212 = {
+	type = character_event
+	title = ef_events.1212.t
+	desc = ef_events.1212.desc
+	theme = faith
+
+	option = {
+		name = ef_events.1212.a
+	}
+}

@@ -67,12 +67,40 @@ ef_max_faithful_value = {
 
 ef_exalted_faithful_count_for_patron_value = {
 	value = 0
-	every_living_character = {
+	if = {
 		limit = {
-			has_trait = ef_exalted_faithful
-			exists = var:ef_patron
-			var:ef_patron = root
+			any_in_list = {
+				variable = ef_bound_faithful
+				count >= 1
+			}
 		}
-		add = 1
+		every_in_list = {
+			variable = ef_bound_faithful
+			limit = {
+				is_alive = yes
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+			add = 1
+		}
+	}
+	else = {
+		every_vassal = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+			add = 1
+		}
+		every_courtier_or_guest = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+			add = 1
+		}
 	}
 }

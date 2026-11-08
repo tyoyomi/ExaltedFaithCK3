@@ -12,11 +12,23 @@ ef_settings.1001 = {
 		first_valid = {
 			triggered_desc = {
 				trigger = {
-					any_living_character = {
-						count >= 1
-						has_trait = ef_exalted_faithful
-						exists = var:ef_patron
-						var:ef_patron = root
+					OR = {
+						any_in_list = {
+							variable = ef_bound_faithful
+							count >= 1
+							is_alive = yes
+							has_trait = ef_exalted_faithful
+						}
+						any_vassal = {
+							has_trait = ef_exalted_faithful
+							exists = var:ef_patron
+							var:ef_patron = root
+						}
+						any_courtier_or_guest = {
+							has_trait = ef_exalted_faithful
+							exists = var:ef_patron
+							var:ef_patron = root
+						}
 					}
 				}
 				desc = ef_settings.1001.desc_holders
@@ -106,13 +118,41 @@ ef_settings.1001 = {
 
 	immediate = {
 		ef_ensure_faithful_defaults_effect = yes
-		every_living_character = {
+		if = {
 			limit = {
-				has_trait = ef_exalted_faithful
-				exists = var:ef_patron
-				var:ef_patron = root
+				any_in_list = {
+					variable = ef_bound_faithful
+					count >= 1
+				}
 			}
-			add_to_list = ef_my_faithful
+			every_in_list = {
+				variable = ef_bound_faithful
+				limit = {
+					is_alive = yes
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = root
+				}
+				add_to_list = ef_my_faithful
+			}
+		}
+		else = {
+			every_vassal = {
+				limit = {
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = root
+				}
+				add_to_list = ef_my_faithful
+			}
+			every_courtier_or_guest = {
+				limit = {
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = root
+				}
+				add_to_list = ef_my_faithful
+			}
 		}
 	}
 

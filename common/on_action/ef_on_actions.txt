@@ -35,7 +35,16 @@ ef_on_title_lost = {
 	trigger = {
 		OR = {
 			has_trait = ef_exalted_faithful
-			any_living_character = {
+			any_in_list = {
+				variable = ef_bound_faithful
+				count >= 1
+			}
+			any_vassal = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+			any_courtier_or_guest = {
 				has_trait = ef_exalted_faithful
 				exists = var:ef_patron
 				var:ef_patron = root
@@ -47,13 +56,41 @@ ef_on_title_lost = {
 			limit = { has_trait = ef_exalted_faithful }
 			ef_evaluate_strip_exalted_faithful_effect = yes
 		}
-		every_living_character = {
+		if = {
 			limit = {
-				has_trait = ef_exalted_faithful
-				exists = var:ef_patron
-				var:ef_patron = root
+				any_in_list = {
+					variable = ef_bound_faithful
+					count >= 1
+				}
 			}
-			ef_evaluate_strip_exalted_faithful_effect = yes
+			every_in_list = {
+				variable = ef_bound_faithful
+				limit = {
+					is_alive = yes
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = root
+				}
+				ef_evaluate_strip_exalted_faithful_effect = yes
+			}
+		}
+		else = {
+			every_vassal = {
+				limit = {
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = root
+				}
+				ef_evaluate_strip_exalted_faithful_effect = yes
+			}
+			every_courtier_or_guest = {
+				limit = {
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = root
+				}
+				ef_evaluate_strip_exalted_faithful_effect = yes
+			}
 		}
 	}
 }
@@ -67,6 +104,7 @@ ef_yearly_realm_faith_check = {
 		has_trait = ef_exalted_faithful
 	}
 	effect = {
+		ef_register_bound_faithful_effect = yes
 		ef_evaluate_strip_exalted_faithful_effect = yes
 		ef_refresh_faithful_modifiers_effect = yes
 	}
@@ -91,13 +129,24 @@ on_death = {
 
 ef_on_death = {
 	effect = {
-		# Dying patron: rebind or strip faithful
+		# Dying patron: rebind or strip faithful (list / realm — never full-world)
 		if = {
 			limit = {
-				any_living_character = {
-					has_trait = ef_exalted_faithful
-					exists = var:ef_patron
-					var:ef_patron = root
+				OR = {
+					any_in_list = {
+						variable = ef_bound_faithful
+						count >= 1
+					}
+					any_vassal = {
+						has_trait = ef_exalted_faithful
+						exists = var:ef_patron
+						var:ef_patron = root
+					}
+					any_courtier_or_guest = {
+						has_trait = ef_exalted_faithful
+						exists = var:ef_patron
+						var:ef_patron = root
+					}
 				}
 			}
 			ef_on_patron_death_effect = yes

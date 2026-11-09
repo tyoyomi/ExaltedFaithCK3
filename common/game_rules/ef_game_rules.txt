@@ -162,3 +162,32 @@ ef_rule_auto_strip_decisions = {
 	ef_rule_auto_strip_decisions_off = {
 	}
 }
+
+### Next-iter — conversion pulse + fervor proxy
+ef_rule_conversion_pulse = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_conversion_pulse_on
+
+	ef_rule_conversion_pulse_on = {
+	}
+
+	ef_rule_conversion_pulse_off = {
+	}
+}
+
+ef_rule_fervor_proxy = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_fervor_proxy_on
+
+	ef_rule_fervor_proxy_on = {
+	}
+
+	ef_rule_fervor_proxy_off = {
+	}
+}

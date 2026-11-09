@@ -115,3 +115,30 @@ ef_events.1504 = {
 	theme = faith
 	option = { name = ef_events.1504.a }
 }
+
+# Granter: heretic strip
+ef_events.1221 = {
+	type = character_event
+	title = ef_events.1221.t
+	desc = ef_events.1221.desc
+	theme = faith
+	option = { name = ef_events.1221.a }
+}
+
+# Former holder: exaltation ended (heretic)
+ef_events.1222 = {
+	type = character_event
+	title = ef_events.1222.t
+	desc = ef_events.1222.desc
+	theme = faith
+	option = { name = ef_events.1222.a }
+}
+
+# Convert pulse summary
+ef_events.1601 = {
+	type = character_event
+	title = ef_events.1601.t
+	desc = ef_events.1601.desc
+	theme = faith
+	option = { name = ef_events.1601.a }
+}

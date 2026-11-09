@@ -1,0 +1,494 @@
+# Exalted Faith — next-iter effects (convert / holy board cycles / fervor / heretic hunt)
+
+### Convert pulse — this = converter (landed player)
+ef_convert_realm_faith_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			is_landed = yes
+			exists = faith
+			has_game_rule = ef_rule_conversion_pulse_on
+		}
+		save_scope_as = ef_converter
+		# Ensure cfg readable for intensity scope
+		if = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = { is_alive = yes }
+				this != var:ef_patron
+			}
+			var:ef_patron = { ef_ensure_faithful_defaults_effect = yes }
+		}
+		else = {
+			ef_ensure_faithful_defaults_effect = yes
+		}
+		set_variable = { name = ef_convert_county_count value = 0 }
+		set_variable = { name = ef_convert_courtier_count value = 0 }
+
+		if = {
+			limit = { ef_conversion_scope_is_capital_duchy_only = yes }
+			if = {
+				limit = {
+					exists = capital_county
+					capital_county = { exists = duchy }
+				}
+				capital_county.duchy = { save_scope_as = ef_cap_duchy }
+				every_sub_realm_county = {
+					limit = {
+						exists = faith
+						NOT = { faith = scope:ef_converter.faith }
+						duchy = scope:ef_cap_duchy
+					}
+					set_county_faith = scope:ef_converter.faith
+					scope:ef_converter = {
+						change_variable = { name = ef_convert_county_count add = 1 }
+					}
+				}
+			}
+		}
+		else = {
+			every_sub_realm_county = {
+				limit = {
+					exists = faith
+					NOT = { faith = scope:ef_converter.faith }
+				}
+				set_county_faith = scope:ef_converter.faith
+				scope:ef_converter = {
+					change_variable = { name = ef_convert_county_count add = 1 }
+				}
+			}
+		}
+
+		# Courtiers/guests only — never mass-convert landed vassal characters
+		every_courtier_or_guest = {
+			limit = {
+				is_alive = yes
+				exists = faith
+				NOT = { faith = scope:ef_converter.faith }
+			}
+			set_character_faith = scope:ef_converter.faith
+			scope:ef_converter = {
+				change_variable = { name = ef_convert_courtier_count add = 1 }
+			}
+		}
+	}
+}
+
+# Yearly drip — this = playable landed patron/faithful; Mid 1 / High up to 3 / Low skip
+ef_yearly_conversion_drip_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			is_landed = yes
+			exists = faith
+			has_game_rule = ef_rule_conversion_pulse_on
+			OR = {
+				has_trait = ef_exalted_faithful
+				ef_has_any_exalted_faithful = yes
+			}
+		}
+		save_scope_as = ef_converter
+		if = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = { is_alive = yes }
+				this != var:ef_patron
+			}
+			var:ef_patron = { ef_ensure_faithful_defaults_effect = yes }
+		}
+		else = {
+			ef_ensure_faithful_defaults_effect = yes
+		}
+		# Resolve influence cfg onto converter temp
+		set_variable = { name = ef_drip_influence value = 2 }
+		if = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = { is_alive = yes exists = var:ef_cfg_influence }
+				this != var:ef_patron
+			}
+			var:ef_patron = {
+				if = {
+					limit = { var:ef_cfg_influence = 1 }
+					scope:ef_converter = { set_variable = { name = ef_drip_influence value = 1 } }
+				}
+				else_if = {
+					limit = { var:ef_cfg_influence = 3 }
+					scope:ef_converter = { set_variable = { name = ef_drip_influence value = 3 } }
+				}
+				else = {
+					scope:ef_converter = { set_variable = { name = ef_drip_influence value = 2 } }
+				}
+			}
+		}
+		else_if = {
+			limit = { exists = var:ef_cfg_influence }
+			if = {
+				limit = { var:ef_cfg_influence = 1 }
+				set_variable = { name = ef_drip_influence value = 1 }
+			}
+			else_if = {
+				limit = { var:ef_cfg_influence = 3 }
+				set_variable = { name = ef_drip_influence value = 3 }
+			}
+		}
+		# Low influence: skip drip
+		if = {
+			limit = { var:ef_drip_influence = 1 }
+		}
+		else = {
+			set_variable = { name = ef_drip_budget value = 1 }
+			if = {
+				limit = { var:ef_drip_influence = 3 }
+				set_variable = { name = ef_drip_budget value = 3 }
+			}
+			while = {
+				limit = {
+					var:ef_drip_budget > 0
+					any_sub_realm_county = {
+						exists = faith
+						NOT = { faith = scope:ef_converter.faith }
+					}
+				}
+				random_sub_realm_county = {
+					limit = {
+						exists = faith
+						NOT = { faith = scope:ef_converter.faith }
+					}
+					set_county_faith = scope:ef_converter.faith
+				}
+				change_variable = { name = ef_drip_budget subtract = 1 }
+			}
+			remove_variable = ef_drip_budget
+		}
+		remove_variable = ef_drip_influence
+	}
+}
+
+### Holy board / fervor cfg cycles — this = patron (hub root)
+ef_cycle_clergy_comfort_cfg_effect = {
+	ef_ensure_faithful_defaults_effect = yes
+	if = {
+		limit = { var:ef_cfg_clergy_comfort = 1 }
+		set_variable = { name = ef_cfg_clergy_comfort value = 2 }
+	}
+	else_if = {
+		limit = { var:ef_cfg_clergy_comfort = 2 }
+		set_variable = { name = ef_cfg_clergy_comfort value = 3 }
+	}
+	else = {
+		set_variable = { name = ef_cfg_clergy_comfort value = 1 }
+	}
+	ef_refresh_all_faithful_for_patron_effect = yes
+}
+
+ef_cycle_tenet_comfort_cfg_effect = {
+	ef_ensure_faithful_defaults_effect = yes
+	if = {
+		limit = { var:ef_cfg_tenet_comfort = 1 }
+		set_variable = { name = ef_cfg_tenet_comfort value = 2 }
+	}
+	else_if = {
+		limit = { var:ef_cfg_tenet_comfort = 2 }
+		set_variable = { name = ef_cfg_tenet_comfort value = 3 }
+	}
+	else = {
+		set_variable = { name = ef_cfg_tenet_comfort value = 1 }
+	}
+	ef_refresh_all_faithful_for_patron_effect = yes
+}
+
+ef_cycle_fervor_cfg_effect = {
+	ef_ensure_faithful_defaults_effect = yes
+	if = {
+		limit = { var:ef_cfg_fervor = 1 }
+		set_variable = { name = ef_cfg_fervor value = 2 }
+	}
+	else_if = {
+		limit = { var:ef_cfg_fervor = 2 }
+		set_variable = { name = ef_cfg_fervor value = 3 }
+	}
+	else = {
+		set_variable = { name = ef_cfg_fervor value = 1 }
+	}
+	ef_refresh_all_faithful_for_patron_effect = yes
+}
+
+### Yearly BGA tenet fulfillment pulse — this = exalted faithful
+ef_yearly_tenet_fulfillment_pulse_effect = {
+	if = {
+		limit = {
+			has_trait = ef_exalted_faithful
+			ef_bga_features_active = yes
+			exists = var:ef_patron
+			var:ef_patron = { is_alive = yes }
+		}
+		var:ef_patron = {
+			ef_ensure_faithful_defaults_effect = yes
+			save_scope_as = ef_cfg_source
+		}
+		if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_tenet_comfort = 1 } }
+			change_spiritual_fulfillment = minor_spiritual_fulfillment_value
+		}
+		else_if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_tenet_comfort = 3 } }
+			change_spiritual_fulfillment = major_spiritual_fulfillment_value
+		}
+		else = {
+			change_spiritual_fulfillment = medium_spiritual_fulfillment_value
+		}
+	}
+}
+
+### Fervor proxy pulse — this = eligible exalted faithful
+ef_apply_fervor_proxy_pulse_effect = {
+	if = {
+		limit = {
+			ef_is_fervor_proxy_eligible = yes
+			exists = faith
+			exists = var:ef_patron
+			var:ef_patron = { is_alive = yes }
+		}
+		var:ef_patron = {
+			ef_ensure_faithful_defaults_effect = yes
+			save_scope_as = ef_cfg_source
+		}
+		# Floor / pulse by cfg
+		if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_fervor = 1 } }
+			faith = {
+				if = {
+					limit = { fervor < 25 }
+					change_fervor = 1
+				}
+			}
+		}
+		else_if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_fervor = 3 } }
+			faith = {
+				if = {
+					limit = { fervor < 50 }
+					change_fervor = 4
+				}
+			}
+		}
+		else = {
+			faith = {
+				if = {
+					limit = { fervor < 35 }
+					change_fervor = 2
+				}
+			}
+		}
+		# Refresh applies fervor proxy modifiers via main refresh
+		ef_refresh_faithful_modifiers_effect = yes
+	}
+}
+
+### Heretic hunt — this = patron
+# Pass A unworthy (existing strip), Pass B hostile bound, Pass C realm hygiene, sting
+ef_heretic_hunt_for_patron_effect = {
+	save_scope_as = ef_patron
+	set_variable = { name = ef_auto_strip_count value = 0 }
+	set_variable = { name = ef_heretic_strip_count value = 0 }
+
+	# Pass A — unworthy (realm / faith-exit / sovereign exclusion)
+	if = {
+		limit = {
+			any_in_list = {
+				variable = ef_bound_faithful
+				count >= 1
+			}
+		}
+		every_in_list = {
+			variable = ef_bound_faithful
+			limit = {
+				is_alive = yes
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = scope:ef_patron
+				ef_should_strip_exalted_faithful = yes
+			}
+			ef_strip_exalted_faithful_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_strip_count add = 1 } }
+		}
+	}
+	else = {
+		every_vassal = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = scope:ef_patron
+				ef_should_strip_exalted_faithful = yes
+			}
+			ef_strip_exalted_faithful_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_strip_count add = 1 } }
+		}
+		every_courtier_or_guest = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = scope:ef_patron
+				ef_should_strip_exalted_faithful = yes
+			}
+			ef_strip_exalted_faithful_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_strip_count add = 1 } }
+		}
+	}
+
+	# Pass B — hostile / heresy bound faithful still holding the trait
+	if = {
+		limit = {
+			any_in_list = {
+				variable = ef_bound_faithful
+				count >= 1
+			}
+		}
+		every_in_list = {
+			variable = ef_bound_faithful
+			limit = {
+				is_alive = yes
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = scope:ef_patron
+				ef_should_strip_for_heretic = yes
+			}
+			add_character_flag = ef_strip_reason_heretic
+			# Silent cleanup + distinct notify path via strip effect flags
+			if = {
+				limit = {
+					exists = var:ef_patron
+					var:ef_patron = { is_alive = yes is_ai = no }
+				}
+				var:ef_patron = { save_scope_as = ef_notify_patron }
+			}
+			save_scope_as = ef_former_faithful
+			if = {
+				limit = {
+					exists = scope:ef_notify_patron
+					scope:ef_notify_patron = { is_ai = no }
+				}
+				scope:ef_notify_patron = { trigger_event = ef_events.1221 }
+			}
+			if = {
+				limit = { is_ai = no }
+				trigger_event = ef_events.1222
+			}
+			ef_clear_faithful_modifiers_effect = yes
+			ef_unregister_bound_faithful_effect = yes
+			remove_trait = ef_exalted_faithful
+			remove_variable = ef_patron
+			remove_character_flag = ef_is_exalted
+			remove_character_flag = ef_strip_reason_faith
+			remove_character_flag = ef_strip_reason_heretic
+			scope:ef_patron = { change_variable = { name = ef_heretic_strip_count add = 1 } }
+		}
+	}
+
+	# Pass C — realm hygiene (vassals + court; no world scan)
+	every_vassal = {
+		limit = {
+			has_trait = ef_exalted_faithful
+			exists = var:ef_patron
+			var:ef_patron = scope:ef_patron
+			OR = {
+				ef_should_strip_exalted_faithful = yes
+				ef_should_strip_for_heretic = yes
+			}
+		}
+		if = {
+			limit = { ef_should_strip_for_heretic = yes }
+			add_character_flag = ef_strip_reason_heretic
+			ef_revoke_exalted_faithful_silent_effect = yes
+			remove_character_flag = ef_strip_reason_heretic
+			scope:ef_patron = { change_variable = { name = ef_heretic_strip_count add = 1 } }
+		}
+		else = {
+			ef_strip_exalted_faithful_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_strip_count add = 1 } }
+		}
+	}
+	every_courtier_or_guest = {
+		limit = {
+			has_trait = ef_exalted_faithful
+			exists = var:ef_patron
+			var:ef_patron = scope:ef_patron
+			OR = {
+				ef_should_strip_exalted_faithful = yes
+				ef_should_strip_for_heretic = yes
+			}
+		}
+		if = {
+			limit = { ef_should_strip_for_heretic = yes }
+			add_character_flag = ef_strip_reason_heretic
+			ef_revoke_exalted_faithful_silent_effect = yes
+			remove_character_flag = ef_strip_reason_heretic
+			scope:ef_patron = { change_variable = { name = ef_heretic_strip_count add = 1 } }
+		}
+		else = {
+			ef_strip_exalted_faithful_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_strip_count add = 1 } }
+		}
+	}
+
+	# Theater sting — hostile landed vassals who were never exalted
+	every_vassal = {
+		limit = { ef_is_heretic_sting_target = yes }
+		add_character_modifier = {
+			modifier = ef_heretic_marked_modifier
+			years = 2
+		}
+		add_opinion = {
+			target = scope:ef_patron
+			modifier = ef_heretic_marked_opinion
+		}
+	}
+}
+
+# Shared title-change strip eval (gain + loss) — this = root character
+ef_on_title_change_strip_eval_effect = {
+	if = {
+		limit = { has_trait = ef_exalted_faithful }
+		ef_evaluate_strip_exalted_faithful_effect = yes
+	}
+	if = {
+		limit = {
+			any_in_list = {
+				variable = ef_bound_faithful
+				count >= 1
+			}
+		}
+		every_in_list = {
+			variable = ef_bound_faithful
+			limit = {
+				is_alive = yes
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+			ef_evaluate_strip_exalted_faithful_effect = yes
+		}
+	}
+	else = {
+		every_vassal = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+			ef_evaluate_strip_exalted_faithful_effect = yes
+		}
+		every_courtier_or_guest = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+			ef_evaluate_strip_exalted_faithful_effect = yes
+		}
+	}
+}

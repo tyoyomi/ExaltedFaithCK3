@@ -1,0 +1,7 @@
+# Exalted Faith — opinion modifiers
+
+ef_heretic_marked_opinion = {
+	monthly_decay = 1
+	years = 2
+	opinion = -20
+}

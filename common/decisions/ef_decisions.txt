@@ -178,3 +178,43 @@ ef_auto_strip_unworthy_exalted_faithful_decision = {
 	ai_potential = { always = no }
 	ai_will_do = { base = 0 }
 }
+
+ef_convert_realm_faith_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ef_convert_realm_faith_decision_desc
+	selection_tooltip = ef_convert_realm_faith_decision_tooltip
+	confirm_text = ef_convert_realm_faith_decision_confirm
+
+	ai_check_interval = 0
+	cooldown = { days = 365 }
+
+	is_shown = {
+		is_alive = yes
+		is_ai = no
+		has_game_rule = ef_rule_conversion_pulse_on
+		NOT = { has_game_rule = ef_rule_granting_disabled }
+		OR = {
+			has_trait = ef_exalted_faithful
+			ef_has_any_exalted_faithful = yes
+		}
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = ef_tt_convert_realm_faith_ready
+			ef_can_fire_conversion_pulse = yes
+		}
+	}
+
+	effect = {
+		custom_tooltip = ef_convert_realm_faith_decision_effect_tt
+		ef_convert_realm_faith_effect = yes
+		trigger_event = ef_events.1601
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}

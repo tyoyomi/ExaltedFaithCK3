@@ -91,3 +91,80 @@ ef_fulfillment_high_modifier = {
 	character_spiritual_fulfillment_gain_mult = @ef_fulfill_gain_high
 	character_spiritual_fulfillment_loss_mult = @ef_fulfill_loss_high
 }
+
+### Core clergy comfort (always — under piety faucet)
+@ef_clergy_comfort_piety_low = 2
+@ef_clergy_comfort_piety_mid = 5
+@ef_clergy_comfort_piety_high = 10
+@ef_clergy_comfort_op_low = 5
+@ef_clergy_comfort_op_mid = 10
+@ef_clergy_comfort_op_high = 15
+
+ef_clergy_comfort_low_modifier = {
+	monthly_piety = @ef_clergy_comfort_piety_low
+	clergy_opinion = @ef_clergy_comfort_op_low
+	zealot_opinion = @ef_clergy_comfort_op_low
+}
+ef_clergy_comfort_mid_modifier = {
+	monthly_piety = @ef_clergy_comfort_piety_mid
+	clergy_opinion = @ef_clergy_comfort_op_mid
+	zealot_opinion = @ef_clergy_comfort_op_mid
+}
+ef_clergy_comfort_high_modifier = {
+	monthly_piety = @ef_clergy_comfort_piety_high
+	clergy_opinion = @ef_clergy_comfort_op_high
+	zealot_opinion = @ef_clergy_comfort_op_high
+}
+
+### BGA tenet comfort — stress dampen (DLC only)
+@ef_tenet_stress_low = -0.1
+@ef_tenet_stress_mid = -0.2
+@ef_tenet_stress_high = -0.3
+@ef_tenet_fulfill_gain_low = 0.05
+@ef_tenet_fulfill_gain_mid = 0.1
+@ef_tenet_fulfill_gain_high = 0.15
+
+ef_tenet_comfort_low_modifier = {
+	stress_gain_mult = @ef_tenet_stress_low
+	character_spiritual_fulfillment_gain_mult = @ef_tenet_fulfill_gain_low
+}
+ef_tenet_comfort_mid_modifier = {
+	stress_gain_mult = @ef_tenet_stress_mid
+	character_spiritual_fulfillment_gain_mult = @ef_tenet_fulfill_gain_mid
+}
+ef_tenet_comfort_high_modifier = {
+	stress_gain_mult = @ef_tenet_stress_high
+	character_spiritual_fulfillment_gain_mult = @ef_tenet_fulfill_gain_high
+}
+
+### Fervor proxy — chaplain / HoF only
+@ef_fervor_same_faith_low = 8
+@ef_fervor_vassal_low = 5
+@ef_fervor_reform_low = -0.1
+@ef_fervor_same_faith_mid = 15
+@ef_fervor_vassal_mid = 10
+@ef_fervor_reform_mid = -0.2
+@ef_fervor_same_faith_high = 25
+@ef_fervor_vassal_high = 15
+@ef_fervor_reform_high = -0.3
+
+ef_fervor_proxy_low_modifier = {
+	same_faith_opinion = @ef_fervor_same_faith_low
+	vassal_opinion = @ef_fervor_vassal_low
+	faith_creation_piety_cost_mult = @ef_fervor_reform_low
+}
+ef_fervor_proxy_mid_modifier = {
+	same_faith_opinion = @ef_fervor_same_faith_mid
+	vassal_opinion = @ef_fervor_vassal_mid
+	faith_creation_piety_cost_mult = @ef_fervor_reform_mid
+}
+ef_fervor_proxy_high_modifier = {
+	same_faith_opinion = @ef_fervor_same_faith_high
+	vassal_opinion = @ef_fervor_vassal_high
+	faith_creation_piety_cost_mult = @ef_fervor_reform_high
+}
+
+### Heretic hunt theater sting (temporary)
+ef_heretic_marked_modifier = {
+	general_opinion = -5
+}

@@ -71,6 +71,15 @@ ef_clear_faithful_modifiers_effect = {
 	remove_character_modifier = ef_fulfillment_low_modifier
 	remove_character_modifier = ef_fulfillment_mid_modifier
 	remove_character_modifier = ef_fulfillment_high_modifier
+	remove_character_modifier = ef_clergy_comfort_low_modifier
+	remove_character_modifier = ef_clergy_comfort_mid_modifier
+	remove_character_modifier = ef_clergy_comfort_high_modifier
+	remove_character_modifier = ef_tenet_comfort_low_modifier
+	remove_character_modifier = ef_tenet_comfort_mid_modifier
+	remove_character_modifier = ef_tenet_comfort_high_modifier
+	remove_character_modifier = ef_fervor_proxy_low_modifier
+	remove_character_modifier = ef_fervor_proxy_mid_modifier
+	remove_character_modifier = ef_fervor_proxy_high_modifier
 }
 
 # this = patron (or any character holding hub cfg vars)
@@ -100,6 +109,18 @@ ef_ensure_faithful_defaults_effect = {
 	if = {
 		limit = { NOT = { exists = var:ef_cfg_fulfillment } }
 		set_variable = { name = ef_cfg_fulfillment value = 2 }
+	}
+	if = {
+		limit = { NOT = { exists = var:ef_cfg_clergy_comfort } }
+		set_variable = { name = ef_cfg_clergy_comfort value = 2 }
+	}
+	if = {
+		limit = { NOT = { exists = var:ef_cfg_tenet_comfort } }
+		set_variable = { name = ef_cfg_tenet_comfort value = 2 }
+	}
+	if = {
+		limit = { NOT = { exists = var:ef_cfg_fervor } }
+		set_variable = { name = ef_cfg_fervor value = 2 }
 	}
 }
 
@@ -203,6 +224,77 @@ ef_refresh_faithful_modifiers_effect = {
 			else = {
 				add_character_modifier = {
 					modifier = ef_fulfillment_mid_modifier
+					days = -1
+				}
+			}
+			# Tenet comfort (BGA) — stress dampen stacked with fulfillment
+			if = {
+				limit = { scope:ef_cfg_source = { var:ef_cfg_tenet_comfort = 1 } }
+				add_character_modifier = {
+					modifier = ef_tenet_comfort_low_modifier
+					days = -1
+				}
+			}
+			else_if = {
+				limit = { scope:ef_cfg_source = { var:ef_cfg_tenet_comfort = 3 } }
+				add_character_modifier = {
+					modifier = ef_tenet_comfort_high_modifier
+					days = -1
+				}
+			}
+			else = {
+				add_character_modifier = {
+					modifier = ef_tenet_comfort_mid_modifier
+					days = -1
+				}
+			}
+		}
+
+		# Core clergy comfort (always)
+		if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_clergy_comfort = 1 } }
+			add_character_modifier = {
+				modifier = ef_clergy_comfort_low_modifier
+				days = -1
+			}
+		}
+		else_if = {
+			limit = { scope:ef_cfg_source = { var:ef_cfg_clergy_comfort = 3 } }
+			add_character_modifier = {
+				modifier = ef_clergy_comfort_high_modifier
+				days = -1
+			}
+		}
+		else = {
+			add_character_modifier = {
+				modifier = ef_clergy_comfort_mid_modifier
+				days = -1
+			}
+		}
+
+		# Fervor proxy package — only while eligible chaplain/HoF
+		if = {
+			limit = {
+				has_game_rule = ef_rule_fervor_proxy_on
+				ef_is_fervor_proxy_eligible = yes
+			}
+			if = {
+				limit = { scope:ef_cfg_source = { var:ef_cfg_fervor = 1 } }
+				add_character_modifier = {
+					modifier = ef_fervor_proxy_low_modifier
+					days = -1
+				}
+			}
+			else_if = {
+				limit = { scope:ef_cfg_source = { var:ef_cfg_fervor = 3 } }
+				add_character_modifier = {
+					modifier = ef_fervor_proxy_high_modifier
+					days = -1
+				}
+			}
+			else = {
+				add_character_modifier = {
+					modifier = ef_fervor_proxy_mid_modifier
 					days = -1
 				}
 			}
@@ -364,6 +456,7 @@ ef_strip_exalted_faithful_effect = {
 		remove_variable = ef_patron
 		remove_character_flag = ef_is_exalted
 		remove_character_flag = ef_strip_reason_faith
+		remove_character_flag = ef_strip_reason_heretic
 	}
 }
 
@@ -483,6 +576,7 @@ ef_revoke_exalted_faithful_effect = {
 		remove_variable = ef_patron
 		remove_character_flag = ef_is_exalted
 		remove_character_flag = ef_strip_reason_faith
+		remove_character_flag = ef_strip_reason_heretic
 	}
 }
 
@@ -600,5 +694,6 @@ ef_on_holder_death_cleanup_effect = {
 		remove_variable = ef_patron
 		remove_character_flag = ef_is_exalted
 		remove_character_flag = ef_strip_reason_faith
+		remove_character_flag = ef_strip_reason_heretic
 	}
 }

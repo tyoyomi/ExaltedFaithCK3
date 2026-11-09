@@ -50,6 +50,7 @@ ef_revoke_exalted_faithful_silent_effect = {
 		remove_variable = ef_patron
 		remove_character_flag = ef_is_exalted
 		remove_character_flag = ef_strip_reason_faith
+		remove_character_flag = ef_strip_reason_heretic
 	}
 }
 
@@ -171,28 +172,8 @@ ef_auto_strip_all_exalted_faithful_for_patron_effect = {
 }
 
 ef_auto_strip_unworthy_exalted_faithful_for_patron_effect = {
-	save_scope_as = ef_patron
-	set_variable = { name = ef_auto_strip_count value = 0 }
-	if = {
-		limit = {
-			any_in_list = {
-				variable = ef_bound_faithful
-				count >= 1
-			}
-		}
-		every_in_list = {
-			variable = ef_bound_faithful
-			limit = {
-				is_alive = yes
-				has_trait = ef_exalted_faithful
-				exists = var:ef_patron
-				var:ef_patron = scope:ef_patron
-				ef_should_strip_exalted_faithful = yes
-			}
-			ef_strip_exalted_faithful_effect = yes
-			scope:ef_patron = { change_variable = { name = ef_auto_strip_count add = 1 } }
-		}
-	}
+	# Next-iter: unworthy strip + heretic hunt + realm hygiene + sting
+	ef_heretic_hunt_for_patron_effect = yes
 }
 
 # this = newborn — inherit faithful from parent when same faith / patron room

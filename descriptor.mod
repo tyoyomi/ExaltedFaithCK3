@@ -1,4 +1,4 @@
-version="0.3.0"
+﻿ï»¿version="0.3.0"
 tags={
 	"Gameplay"
 	"Events"

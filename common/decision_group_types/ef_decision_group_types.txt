@@ -1,0 +1,7 @@
+# Exalted Faith — custom decision group (additive; does not replace vanilla major)
+
+ef_exalted = {
+	sort_order = 187
+	gui_tags = { big_button }
+	important_decision_group = yes
+}

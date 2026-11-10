@@ -1,0 +1,77 @@
+namespace = ef_actions
+
+# Exalted Faith Actions hub — Done first (SS/EC craft).
+# Former major verbs: mass bestow / auto-assign / strip all / strip unworthy.
+# Event options hide when gated (engine has no grey-out for event options).
+# After take, toast events own next click — do not re-open hub.
+
+ef_actions.1001 = {
+	type = character_event
+	title = ef_actions.1001.t
+	theme = faith
+
+	desc = ef_actions.1001.desc
+
+	# Done first — closes hub
+	option = {
+		name = ef_actions.1001.close
+		custom_tooltip = ef_actions.tt.close
+	}
+
+	# Mass Bestow Exalted Faithful
+	option = {
+		name = ef_actions.1001.mass_bestow
+		trigger = {
+			NOT = { has_game_rule = ef_rule_granting_disabled }
+			custom_tooltip = {
+				text = ef_tt_mass_bestow_has_eligible
+				OR = {
+					ef_has_any_auto_assign_eligible = yes
+					any_vassal = { ef_can_receive_exalted_faithful = yes }
+				}
+			}
+		}
+		custom_tooltip = ef_mass_bestow_exalted_faithful_decision_effect_tt
+		ef_mass_bestow_exalted_faithful_for_patron_effect = yes
+		trigger_event = ef_events.1501
+	}
+
+	# Auto-Assign Exalted Faithful
+	option = {
+		name = ef_actions.1001.auto_assign
+		trigger = {
+			NOT = { has_game_rule = ef_rule_granting_disabled }
+			custom_tooltip = {
+				text = ef_tt_auto_assign_has_eligible
+				ef_has_any_auto_assign_eligible = yes
+			}
+		}
+		custom_tooltip = ef_auto_assign_exalted_faithful_decision_effect_tt
+		ef_auto_assign_exalted_faithful_for_patron_effect = yes
+		trigger_event = ef_events.1502
+	}
+
+	# Strip All Exalted Faithful
+	option = {
+		name = ef_actions.1001.strip_all
+		trigger = {
+			has_game_rule = ef_rule_auto_strip_decisions_on
+			ef_has_any_exalted_faithful = yes
+		}
+		custom_tooltip = ef_auto_strip_all_exalted_faithful_decision_effect_tt
+		ef_auto_strip_all_exalted_faithful_for_patron_effect = yes
+		trigger_event = ef_events.1503
+	}
+
+	# Strip Unworthy Exalted Faithful
+	option = {
+		name = ef_actions.1001.strip_unworthy
+		trigger = {
+			has_game_rule = ef_rule_auto_strip_decisions_on
+			ef_has_any_exalted_faithful = yes
+		}
+		custom_tooltip = ef_auto_strip_unworthy_exalted_faithful_decision_effect_tt
+		ef_auto_strip_unworthy_exalted_faithful_for_patron_effect = yes
+		trigger_event = ef_events.1504
+	}
+}

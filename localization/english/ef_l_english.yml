@@ -18,6 +18,25 @@
  ef_manage_exalted_faith_decision_confirm:0 "Open Hub"
  ef_manage_exalted_faith_decision_effect_tt:0 "Opens the Exalted Faith manage hub"
 
+ # Decision group
+ decision_group_type_ef_exalted:0 "Exalted Faith"
+
+ # Actions hub
+ ef_exalted_actions_decision:0 "Exalted Faith: Actions"
+ ef_exalted_actions_decision_desc:0 "Open Faith Actions: mass bestow, auto-assign court targets, or bulk strip Exalted Faithful.\n\nDone is always first. Actions gated by eligibility or game rules stay hidden until ready."
+ ef_exalted_actions_decision_tooltip:0 "Open Faith Actions for mass bestow, auto-assign, and strip verbs"
+ ef_exalted_actions_decision_confirm:0 "Open Actions"
+ ef_exalted_actions_decision_effect_tt:0 "Opens the Exalted Faith Actions hub"
+
+ ef_actions.1001.t:0 "Faith Actions"
+ ef_actions.1001.desc:0 "Choose a Faith action. Done closes the hub. Gated or ineligible actions stay hidden until ready. After a take, summary toasts own the next click."
+ ef_actions.1001.close:0 "Done"
+ ef_actions.1001.mass_bestow:0 "Mass Bestow Exalted Faithful"
+ ef_actions.1001.auto_assign:0 "Auto-Assign Exalted Faithful"
+ ef_actions.1001.strip_all:0 "Strip All Exalted Faithful"
+ ef_actions.1001.strip_unworthy:0 "Strip Unworthy Exalted Faithful"
+ ef_actions.tt.close:0 "Close Faith Actions without taking an action."
+
  # Modifiers
  ef_piety_low_modifier:0 "Exalted Faith — Piety (Low)"
  ef_piety_low_modifier_desc:0 "A modest monthly piety flood from sacred favor."
@@ -228,6 +247,6 @@
  setting_ef_rule_auto_grant_court_and_councillors_desc:0 "Silently exalt on court join and for councillors. Blocks achievements."
  rule_ef_rule_auto_strip_decisions:0 "Exalted Faith: Auto-Strip Decisions"
  setting_ef_rule_auto_strip_decisions_on:0 "On"
- setting_ef_rule_auto_strip_decisions_on_desc:0 "Show bulk Strip All / Strip Unworthy decisions."
+ setting_ef_rule_auto_strip_decisions_on_desc:0 "Show bulk Strip All / Strip Unworthy in Faith Actions."
  setting_ef_rule_auto_strip_decisions_off:0 "Off"
- setting_ef_rule_auto_strip_decisions_off_desc:0 "Hide bulk strip decisions."
+ setting_ef_rule_auto_strip_decisions_off_desc:0 "Hide bulk strip actions in Faith Actions."

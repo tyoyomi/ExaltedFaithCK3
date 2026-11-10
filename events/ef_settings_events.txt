@@ -1,6 +1,6 @@
 namespace = ef_settings
 
-# Manage Exalted Faith hub — holder summary + current tiers + cycle (re-opens after each cycle)
+# Manage Exalted Faith hub — Core holy board + BGA rows + fervor + cycle (re-opens after each cycle)
 ef_settings.1001 = {
 	type = character_event
 	title = ef_settings.1001.t
@@ -12,11 +12,23 @@ ef_settings.1001 = {
 		first_valid = {
 			triggered_desc = {
 				trigger = {
-					any_living_character = {
-						count >= 1
-						has_trait = ef_exalted_faithful
-						exists = var:ef_patron
-						var:ef_patron = root
+					OR = {
+						any_in_list = {
+							variable = ef_bound_faithful
+							count >= 1
+							is_alive = yes
+							has_trait = ef_exalted_faithful
+						}
+						any_vassal = {
+							has_trait = ef_exalted_faithful
+							exists = var:ef_patron
+							var:ef_patron = root
+						}
+						any_courtier_or_guest = {
+							has_trait = ef_exalted_faithful
+							exists = var:ef_patron
+							var:ef_patron = root
+						}
 					}
 				}
 				desc = ef_settings.1001.desc_holders
@@ -24,6 +36,7 @@ ef_settings.1001 = {
 			desc = ef_settings.1001.desc_holders_none
 		}
 		desc = ef_settings.1001.desc_blank
+		desc = ef_settings.1001.desc_core_header
 		first_valid = {
 			triggered_desc = {
 				trigger = { var:ef_cfg_piety = 1 }
@@ -74,6 +87,52 @@ ef_settings.1001 = {
 		desc = ef_settings.1001.desc_blank
 		first_valid = {
 			triggered_desc = {
+				trigger = { var:ef_cfg_clergy_comfort = 1 }
+				desc = ef_settings.tier.clergy_1
+			}
+			triggered_desc = {
+				trigger = { var:ef_cfg_clergy_comfort = 2 }
+				desc = ef_settings.tier.clergy_2
+			}
+			triggered_desc = {
+				trigger = { var:ef_cfg_clergy_comfort = 3 }
+				desc = ef_settings.tier.clergy_3
+			}
+			desc = ef_settings.tier.clergy_2
+		}
+		desc = ef_settings.1001.desc_blank
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_game_rule = ef_rule_fervor_proxy_on
+					var:ef_cfg_fervor = 1
+				}
+				desc = ef_settings.tier.fervor_1
+			}
+			triggered_desc = {
+				trigger = {
+					has_game_rule = ef_rule_fervor_proxy_on
+					var:ef_cfg_fervor = 2
+				}
+				desc = ef_settings.tier.fervor_2
+			}
+			triggered_desc = {
+				trigger = {
+					has_game_rule = ef_rule_fervor_proxy_on
+					var:ef_cfg_fervor = 3
+				}
+				desc = ef_settings.tier.fervor_3
+			}
+			triggered_desc = {
+				trigger = { has_game_rule = ef_rule_fervor_proxy_off }
+				desc = ef_settings.tier.fervor_off
+			}
+			desc = ef_settings.tier.fervor_2
+		}
+		desc = ef_settings.1001.desc_blank
+		desc = ef_settings.1001.desc_bga_header
+		first_valid = {
+			triggered_desc = {
 				trigger = {
 					ef_bga_features_active = yes
 					var:ef_cfg_fulfillment = 1
@@ -101,18 +160,100 @@ ef_settings.1001 = {
 			desc = ef_settings.tier.fulfillment_off
 		}
 		desc = ef_settings.1001.desc_blank
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					ef_bga_features_active = yes
+					var:ef_cfg_tenet_comfort = 1
+				}
+				desc = ef_settings.tier.tenet_1
+			}
+			triggered_desc = {
+				trigger = {
+					ef_bga_features_active = yes
+					var:ef_cfg_tenet_comfort = 2
+				}
+				desc = ef_settings.tier.tenet_2
+			}
+			triggered_desc = {
+				trigger = {
+					ef_bga_features_active = yes
+					var:ef_cfg_tenet_comfort = 3
+				}
+				desc = ef_settings.tier.tenet_3
+			}
+			triggered_desc = {
+				trigger = { ef_bga_features_active = no }
+				desc = ef_settings.tier.tenet_off
+			}
+			desc = ef_settings.tier.tenet_off
+		}
+		desc = ef_settings.1001.desc_blank
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					ef_bga_features_active = yes
+					any_in_list = {
+						variable = ef_bound_faithful
+						count >= 1
+						limit = {
+							is_alive = yes
+							has_trait = ef_exalted_faithful
+							any_personal_tenet = {
+								count >= 1
+							}
+						}
+					}
+				}
+				desc = ef_settings.1001.desc_tenets_blessed
+			}
+			triggered_desc = {
+				trigger = { ef_bga_features_active = yes }
+				desc = ef_settings.1001.desc_tenets_await
+			}
+			desc = ef_settings.1001.desc_blank
+		}
+		desc = ef_settings.1001.desc_blank
 		desc = ef_settings.1001.desc_footer
 	}
 
 	immediate = {
 		ef_ensure_faithful_defaults_effect = yes
-		every_living_character = {
+		if = {
 			limit = {
-				has_trait = ef_exalted_faithful
-				exists = var:ef_patron
-				var:ef_patron = root
+				any_in_list = {
+					variable = ef_bound_faithful
+					count >= 1
+				}
 			}
-			add_to_list = ef_my_faithful
+			every_in_list = {
+				variable = ef_bound_faithful
+				limit = {
+					is_alive = yes
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = root
+				}
+				add_to_list = ef_my_faithful
+			}
+		}
+		else = {
+			every_vassal = {
+				limit = {
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = root
+				}
+				add_to_list = ef_my_faithful
+			}
+			every_courtier_or_guest = {
+				limit = {
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = root
+				}
+				add_to_list = ef_my_faithful
+			}
 		}
 	}
 
@@ -196,6 +337,59 @@ ef_settings.1001 = {
 			text = {
 				first_valid = {
 					triggered_desc = {
+						trigger = { var:ef_cfg_clergy_comfort = 1 }
+						desc = ef_settings.opt.clergy_1
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_clergy_comfort = 2 }
+						desc = ef_settings.opt.clergy_2
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_clergy_comfort = 3 }
+						desc = ef_settings.opt.clergy_3
+					}
+					desc = ef_settings.opt.clergy_2
+				}
+			}
+		}
+		custom_tooltip = ef_settings.tt.clergy
+		ef_cycle_clergy_comfort_cfg_effect = yes
+		trigger_event = ef_settings.1001
+	}
+
+	option = {
+		name = {
+			text = {
+				first_valid = {
+					triggered_desc = {
+						trigger = { var:ef_cfg_fervor = 1 }
+						desc = ef_settings.opt.fervor_1
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_fervor = 2 }
+						desc = ef_settings.opt.fervor_2
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_fervor = 3 }
+						desc = ef_settings.opt.fervor_3
+					}
+					desc = ef_settings.opt.fervor_2
+				}
+			}
+		}
+		trigger = {
+			has_game_rule = ef_rule_fervor_proxy_on
+		}
+		custom_tooltip = ef_settings.tt.fervor
+		ef_cycle_fervor_cfg_effect = yes
+		trigger_event = ef_settings.1001
+	}
+
+	option = {
+		name = {
+			text = {
+				first_valid = {
+					triggered_desc = {
 						trigger = { var:ef_cfg_fulfillment = 1 }
 						desc = ef_settings.opt.fulfillment_1
 					}
@@ -216,6 +410,34 @@ ef_settings.1001 = {
 		}
 		custom_tooltip = ef_settings.tt.fulfillment
 		ef_cycle_fulfillment_cfg_effect = yes
+		trigger_event = ef_settings.1001
+	}
+
+	option = {
+		name = {
+			text = {
+				first_valid = {
+					triggered_desc = {
+						trigger = { var:ef_cfg_tenet_comfort = 1 }
+						desc = ef_settings.opt.tenet_1
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_tenet_comfort = 2 }
+						desc = ef_settings.opt.tenet_2
+					}
+					triggered_desc = {
+						trigger = { var:ef_cfg_tenet_comfort = 3 }
+						desc = ef_settings.opt.tenet_3
+					}
+					desc = ef_settings.opt.tenet_2
+				}
+			}
+		}
+		trigger = {
+			ef_bga_features_active = yes
+		}
+		custom_tooltip = ef_settings.tt.tenet
+		ef_cycle_tenet_comfort_cfg_effect = yes
 		trigger_event = ef_settings.1001
 	}
 

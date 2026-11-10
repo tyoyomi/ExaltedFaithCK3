@@ -35,3 +35,186 @@ ef_manage_exalted_faith_decision = {
 		base = 0
 	}
 }
+
+ef_mass_bestow_exalted_faithful_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ef_mass_bestow_exalted_faithful_decision_desc
+	selection_tooltip = ef_mass_bestow_exalted_faithful_decision_tooltip
+	confirm_text = ef_mass_bestow_exalted_faithful_decision_confirm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_alive = yes
+		NOT = { has_game_rule = ef_rule_granting_disabled }
+		OR = {
+			is_ai = no
+			has_game_rule = ef_rule_granting_player_and_ai
+		}
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = ef_tt_mass_bestow_has_eligible
+			OR = {
+				ef_has_any_auto_assign_eligible = yes
+				any_vassal = { ef_can_receive_exalted_faithful = yes }
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = ef_mass_bestow_exalted_faithful_decision_effect_tt
+		ef_mass_bestow_exalted_faithful_for_patron_effect = yes
+		trigger_event = ef_events.1501
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+ef_auto_assign_exalted_faithful_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ef_auto_assign_exalted_faithful_decision_desc
+	selection_tooltip = ef_auto_assign_exalted_faithful_decision_tooltip
+	confirm_text = ef_auto_assign_exalted_faithful_decision_confirm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_alive = yes
+		NOT = { has_game_rule = ef_rule_granting_disabled }
+		OR = {
+			is_ai = no
+			has_game_rule = ef_rule_granting_player_and_ai
+		}
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = ef_tt_auto_assign_has_eligible
+			ef_has_any_auto_assign_eligible = yes
+		}
+	}
+
+	effect = {
+		custom_tooltip = ef_auto_assign_exalted_faithful_decision_effect_tt
+		ef_auto_assign_exalted_faithful_for_patron_effect = yes
+		trigger_event = ef_events.1502
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+ef_auto_strip_all_exalted_faithful_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ef_auto_strip_all_exalted_faithful_decision_desc
+	selection_tooltip = ef_auto_strip_all_exalted_faithful_decision_tooltip
+	confirm_text = ef_auto_strip_all_exalted_faithful_decision_confirm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_alive = yes
+		has_game_rule = ef_rule_auto_strip_decisions_on
+		OR = {
+			is_ai = no
+			has_game_rule = ef_rule_granting_player_and_ai
+		}
+		ef_has_any_exalted_faithful = yes
+	}
+
+	is_valid = { ef_has_any_exalted_faithful = yes }
+
+	effect = {
+		custom_tooltip = ef_auto_strip_all_exalted_faithful_decision_effect_tt
+		ef_auto_strip_all_exalted_faithful_for_patron_effect = yes
+		trigger_event = ef_events.1503
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+ef_auto_strip_unworthy_exalted_faithful_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ef_auto_strip_unworthy_exalted_faithful_decision_desc
+	selection_tooltip = ef_auto_strip_unworthy_exalted_faithful_decision_tooltip
+	confirm_text = ef_auto_strip_unworthy_exalted_faithful_decision_confirm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_alive = yes
+		has_game_rule = ef_rule_auto_strip_decisions_on
+		OR = {
+			is_ai = no
+			has_game_rule = ef_rule_granting_player_and_ai
+		}
+		ef_has_any_exalted_faithful = yes
+	}
+
+	is_valid = { ef_has_any_exalted_faithful = yes }
+
+	effect = {
+		custom_tooltip = ef_auto_strip_unworthy_exalted_faithful_decision_effect_tt
+		ef_auto_strip_unworthy_exalted_faithful_for_patron_effect = yes
+		trigger_event = ef_events.1504
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}
+
+ef_convert_realm_faith_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ef_convert_realm_faith_decision_desc
+	selection_tooltip = ef_convert_realm_faith_decision_tooltip
+	confirm_text = ef_convert_realm_faith_decision_confirm
+
+	ai_check_interval = 0
+	cooldown = { days = 365 }
+
+	is_shown = {
+		is_alive = yes
+		is_ai = no
+		has_game_rule = ef_rule_conversion_pulse_on
+		NOT = { has_game_rule = ef_rule_granting_disabled }
+		OR = {
+			has_trait = ef_exalted_faithful
+			ef_has_any_exalted_faithful = yes
+		}
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = ef_tt_convert_realm_faith_ready
+			ef_can_fire_conversion_pulse = yes
+		}
+	}
+
+	effect = {
+		custom_tooltip = ef_convert_realm_faith_decision_effect_tt
+		ef_convert_realm_faith_effect = yes
+		trigger_event = ef_events.1601
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}

@@ -1,0 +1,226 @@
+# Exalted Faith — expansion pack (mass bestow / auto assign-strip / inherit)
+
+ef_bestow_exalted_faithful_silent_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			NOT = { has_trait = ef_exalted_faithful }
+		}
+		add_trait = ef_exalted_faithful
+		if = {
+			limit = { exists = scope:ef_patron }
+			set_variable = {
+				name = ef_patron
+				value = scope:ef_patron
+			}
+		}
+		else_if = {
+			limit = { exists = scope:actor }
+			set_variable = {
+				name = ef_patron
+				value = scope:actor
+			}
+			scope:actor = { save_scope_as = ef_patron }
+		}
+		add_character_flag = ef_is_exalted
+		ef_register_bound_faithful_effect = yes
+		if = {
+			limit = {
+				exists = var:ef_patron
+				var:ef_patron = { is_alive = yes }
+			}
+			var:ef_patron = {
+				ef_ensure_faithful_defaults_effect = yes
+			}
+		}
+		ef_refresh_faithful_modifiers_effect = yes
+		if = {
+			limit = { ef_bga_features_active = yes }
+			change_spiritual_fulfillment = minor_spiritual_fulfillment_value
+		}
+	}
+}
+
+ef_revoke_exalted_faithful_silent_effect = {
+	if = {
+		limit = { has_trait = ef_exalted_faithful }
+		ef_clear_faithful_modifiers_effect = yes
+		ef_unregister_bound_faithful_effect = yes
+		remove_trait = ef_exalted_faithful
+		remove_variable = ef_patron
+		remove_character_flag = ef_is_exalted
+		remove_character_flag = ef_strip_reason_faith
+		remove_character_flag = ef_strip_reason_heretic
+	}
+}
+
+ef_try_auto_grant_exalted_faithful_effect = {
+	if = {
+		limit = {
+			exists = scope:ef_patron
+			scope:ef_patron = {
+				is_alive = yes
+				ef_can_actor_bestow = yes
+			}
+			ef_can_receive_exalted_faithful = yes
+		}
+		ef_bestow_exalted_faithful_silent_effect = yes
+	}
+}
+
+ef_auto_assign_exalted_faithful_for_patron_effect = {
+	save_scope_as = ef_patron
+	set_variable = { name = ef_auto_assign_count value = 0 }
+
+	every_councillor = {
+		limit = { ef_can_receive_exalted_faithful = yes }
+		if = {
+			limit = { scope:ef_patron = { ef_patron_under_faithful_cap = yes } }
+			ef_bestow_exalted_faithful_silent_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_assign_count add = 1 } }
+		}
+	}
+
+	every_consort = {
+		limit = { ef_can_receive_exalted_faithful = yes }
+		if = {
+			limit = { scope:ef_patron = { ef_patron_under_faithful_cap = yes } }
+			ef_bestow_exalted_faithful_silent_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_assign_count add = 1 } }
+		}
+	}
+
+	every_courtier_or_guest = {
+		limit = { ef_can_receive_exalted_faithful = yes }
+		add_to_temporary_list = ef_auto_court_pool
+	}
+	ordered_in_list = {
+		list = ef_auto_court_pool
+		order_by = learning
+		descending = yes
+		if = {
+			limit = { scope:ef_patron = { ef_patron_under_faithful_cap = yes } }
+			ef_bestow_exalted_faithful_silent_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_assign_count add = 1 } }
+		}
+	}
+}
+
+ef_mass_bestow_exalted_faithful_for_patron_effect = {
+	save_scope_as = ef_patron
+	set_variable = { name = ef_mass_bestow_count value = 0 }
+	ef_auto_assign_exalted_faithful_for_patron_effect = yes
+	if = {
+		limit = { exists = var:ef_auto_assign_count }
+		set_variable = {
+			name = ef_mass_bestow_count
+			value = var:ef_auto_assign_count
+		}
+	}
+	every_vassal = {
+		limit = { ef_can_receive_exalted_faithful = yes }
+		if = {
+			limit = { scope:ef_patron = { ef_patron_under_faithful_cap = yes } }
+			ef_bestow_exalted_faithful_silent_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_mass_bestow_count add = 1 } }
+		}
+	}
+}
+
+ef_auto_strip_all_exalted_faithful_for_patron_effect = {
+	save_scope_as = ef_patron
+	set_variable = { name = ef_auto_strip_count value = 0 }
+	if = {
+		limit = {
+			any_in_list = {
+				variable = ef_bound_faithful
+				count >= 1
+			}
+		}
+		every_in_list = {
+			variable = ef_bound_faithful
+			limit = {
+				is_alive = yes
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = scope:ef_patron
+			}
+			ef_revoke_exalted_faithful_silent_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_strip_count add = 1 } }
+		}
+	}
+	else = {
+		every_vassal = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = scope:ef_patron
+			}
+			ef_revoke_exalted_faithful_silent_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_strip_count add = 1 } }
+		}
+		every_courtier_or_guest = {
+			limit = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = scope:ef_patron
+			}
+			ef_revoke_exalted_faithful_silent_effect = yes
+			scope:ef_patron = { change_variable = { name = ef_auto_strip_count add = 1 } }
+		}
+	}
+}
+
+ef_auto_strip_unworthy_exalted_faithful_for_patron_effect = {
+	# Next-iter: unworthy strip + heretic hunt + realm hygiene + sting
+	ef_heretic_hunt_for_patron_effect = yes
+}
+
+# this = newborn — inherit faithful from parent when same faith / patron room
+ef_try_inherit_exalted_faithful_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			NOT = { has_trait = ef_exalted_faithful }
+			NOT = { has_game_rule = ef_rule_granting_disabled }
+		}
+		if = {
+			limit = {
+				exists = mother
+				mother = {
+					is_alive = yes
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = {
+						is_alive = yes
+						ef_can_actor_bestow = yes
+					}
+				}
+			}
+			mother = { var:ef_patron = { save_scope_as = ef_patron } }
+			if = {
+				limit = { ef_can_receive_exalted_faithful = yes }
+				ef_bestow_exalted_faithful_silent_effect = yes
+			}
+		}
+		else_if = {
+			limit = {
+				exists = father
+				father = {
+					is_alive = yes
+					has_trait = ef_exalted_faithful
+					exists = var:ef_patron
+					var:ef_patron = {
+						is_alive = yes
+						ef_can_actor_bestow = yes
+					}
+				}
+			}
+			father = { var:ef_patron = { save_scope_as = ef_patron } }
+			if = {
+				limit = { ef_can_receive_exalted_faithful = yes }
+				ef_bestow_exalted_faithful_silent_effect = yes
+			}
+		}
+	}
+}

@@ -27,21 +27,20 @@ ef_actor_may_bestow_by_rule = {
 }
 
 ef_patron_under_faithful_cap = {
-	# this = patron/actor. Save before any_living_character (where this becomes the iteratee).
+	# this = patron/actor. Binder list only (no full-world).
 	trigger_if = {
 		limit = { has_game_rule = ef_rule_max_faithful_unlimited }
 		always = yes
 	}
 	trigger_else = {
-		save_temporary_scope_as = ef_cap_patron
 		custom_tooltip = {
 			text = ef_tt_under_faithful_cap
 			NOT = {
-				any_living_character = {
+				any_in_list = {
+					variable = ef_bound_faithful
 					count >= ef_max_faithful_value
+					is_alive = yes
 					has_trait = ef_exalted_faithful
-					exists = var:ef_patron
-					var:ef_patron = scope:ef_cap_patron
 				}
 			}
 		}

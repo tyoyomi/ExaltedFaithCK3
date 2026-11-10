@@ -1,0 +1,114 @@
+# Exalted Faith — next-iter triggers (convert / fervor / heretic hunt)
+
+# this = converter (patron or self-faithful)
+ef_can_fire_conversion_pulse = {
+	is_alive = yes
+	is_landed = yes
+	is_ai = no
+	has_game_rule = ef_rule_conversion_pulse_on
+	exists = faith
+	OR = {
+		has_trait = ef_exalted_faithful
+		ef_has_any_exalted_faithful = yes
+	}
+	OR = {
+		any_sub_realm_county = {
+			NOT = { faith = root.faith }
+		}
+		any_courtier_or_guest = {
+			is_alive = yes
+			exists = faith
+			NOT = { faith = root.faith }
+		}
+	}
+}
+
+# this = converter — Low influence cfg means capital-duchy county scope
+ef_conversion_scope_is_capital_duchy_only = {
+	trigger_if = {
+		limit = {
+			has_trait = ef_exalted_faithful
+			exists = var:ef_patron
+			var:ef_patron = { is_alive = yes }
+			this != var:ef_patron
+		}
+		var:ef_patron = {
+			exists = var:ef_cfg_influence
+			var:ef_cfg_influence = 1
+		}
+	}
+	trigger_else = {
+		exists = var:ef_cfg_influence
+		var:ef_cfg_influence = 1
+	}
+}
+
+# this = exalted faithful — chaplain of living patron OR head of own faith
+ef_is_fervor_proxy_eligible = {
+	has_trait = ef_exalted_faithful
+	has_game_rule = ef_rule_fervor_proxy_on
+	OR = {
+		has_council_position = councillor_court_chaplain
+		AND = {
+			exists = var:ef_patron
+			var:ef_patron = {
+				is_alive = yes
+				exists = cp:councillor_court_chaplain
+				cp:councillor_court_chaplain = prev
+			}
+		}
+		AND = {
+			exists = faith
+			faith = {
+				exists = religious_head
+				religious_head = prev
+			}
+		}
+		is_theocratic_lessee = yes
+	}
+}
+
+# this = holder; living patron's faith is hostile / heresy / different
+ef_faith_is_hostile_or_heresy_of_patron = {
+	exists = var:ef_patron
+	exists = faith
+	var:ef_patron = {
+		is_alive = yes
+		exists = faith
+		save_temporary_scope_as = ef_host_patron
+	}
+	OR = {
+		NOT = { faith = scope:ef_host_patron.faith }
+		faith = {
+			faith_hostility_level = {
+				target = scope:ef_host_patron.faith
+				value >= 2
+			}
+		}
+	}
+}
+
+ef_should_strip_for_heretic = {
+	has_trait = ef_exalted_faithful
+	exists = var:ef_patron
+	var:ef_patron = { is_alive = yes }
+	ef_faith_is_hostile_or_heresy_of_patron = yes
+}
+
+# this = landed vassal — hostile faith sting target (not exalted)
+ef_is_heretic_sting_target = {
+	is_alive = yes
+	is_landed = yes
+	exists = faith
+	exists = scope:ef_patron
+	scope:ef_patron = {
+		is_alive = yes
+		exists = faith
+	}
+	NOT = { has_trait = ef_exalted_faithful }
+	NOT = { faith = scope:ef_patron.faith }
+	OR = {
+		is_vassal_of = scope:ef_patron
+		any_liege_or_above = { this = scope:ef_patron }
+	}
+}

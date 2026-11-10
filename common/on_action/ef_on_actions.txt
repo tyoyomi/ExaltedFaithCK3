@@ -35,7 +35,16 @@ ef_on_title_lost = {
 	trigger = {
 		OR = {
 			has_trait = ef_exalted_faithful
-			any_living_character = {
+			any_in_list = {
+				variable = ef_bound_faithful
+				count >= 1
+			}
+			any_vassal = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
+			any_courtier_or_guest = {
 				has_trait = ef_exalted_faithful
 				exists = var:ef_patron
 				var:ef_patron = root
@@ -43,18 +52,37 @@ ef_on_title_lost = {
 		}
 	}
 	effect = {
-		if = {
-			limit = { has_trait = ef_exalted_faithful }
-			ef_evaluate_strip_exalted_faithful_effect = yes
-		}
-		every_living_character = {
-			limit = {
+		ef_on_title_change_strip_eval_effect = yes
+	}
+}
+
+# Binder parity with EC — title gain can change realm membership
+on_title_gain = {
+	on_actions = { ef_on_title_gain }
+}
+
+ef_on_title_gain = {
+	trigger = {
+		OR = {
+			has_trait = ef_exalted_faithful
+			any_in_list = {
+				variable = ef_bound_faithful
+				count >= 1
+			}
+			any_vassal = {
 				has_trait = ef_exalted_faithful
 				exists = var:ef_patron
 				var:ef_patron = root
 			}
-			ef_evaluate_strip_exalted_faithful_effect = yes
+			any_courtier_or_guest = {
+				has_trait = ef_exalted_faithful
+				exists = var:ef_patron
+				var:ef_patron = root
+			}
 		}
+	}
+	effect = {
+		ef_on_title_change_strip_eval_effect = yes
 	}
 }
 
@@ -67,8 +95,31 @@ ef_yearly_realm_faith_check = {
 		has_trait = ef_exalted_faithful
 	}
 	effect = {
+		ef_register_bound_faithful_effect = yes
 		ef_evaluate_strip_exalted_faithful_effect = yes
 		ef_refresh_faithful_modifiers_effect = yes
+		ef_yearly_tenet_fulfillment_pulse_effect = yes
+		ef_apply_fervor_proxy_pulse_effect = yes
+	}
+}
+
+# Playable-scoped conversion drip (not everyone pulse)
+yearly_playable_pulse = {
+	on_actions = { ef_yearly_playable_faith_pulse }
+}
+
+ef_yearly_playable_faith_pulse = {
+	trigger = {
+		is_landed = yes
+		is_ai = no
+		has_game_rule = ef_rule_conversion_pulse_on
+		OR = {
+			has_trait = ef_exalted_faithful
+			ef_has_any_exalted_faithful = yes
+		}
+	}
+	effect = {
+		ef_yearly_conversion_drip_effect = yes
 	}
 }
 
@@ -91,13 +142,24 @@ on_death = {
 
 ef_on_death = {
 	effect = {
-		# Dying patron: rebind or strip faithful
+		# Dying patron: rebind or strip faithful (list / realm — never full-world)
 		if = {
 			limit = {
-				any_living_character = {
-					has_trait = ef_exalted_faithful
-					exists = var:ef_patron
-					var:ef_patron = root
+				OR = {
+					any_in_list = {
+						variable = ef_bound_faithful
+						count >= 1
+					}
+					any_vassal = {
+						has_trait = ef_exalted_faithful
+						exists = var:ef_patron
+						var:ef_patron = root
+					}
+					any_courtier_or_guest = {
+						has_trait = ef_exalted_faithful
+						exists = var:ef_patron
+						var:ef_patron = root
+					}
 				}
 			}
 			ef_on_patron_death_effect = yes
@@ -106,6 +168,62 @@ ef_on_death = {
 		if = {
 			limit = { has_trait = ef_exalted_faithful }
 			ef_on_holder_death_cleanup_effect = yes
+		}
+	}
+}
+
+on_birth_child = {
+	on_actions = { ef_on_birth_child }
+}
+
+ef_on_birth_child = {
+	trigger = {
+		OR = {
+			AND = {
+				exists = mother
+				mother = { has_trait = ef_exalted_faithful }
+			}
+			AND = {
+				exists = father
+				father = { has_trait = ef_exalted_faithful }
+			}
+		}
+	}
+	effect = {
+		ef_try_inherit_exalted_faithful_effect = yes
+	}
+}
+
+on_join_court = {
+	on_actions = { ef_on_join_court_auto_grant }
+}
+
+ef_on_join_court_auto_grant = {
+	trigger = {
+		NOT = { has_trait = ef_exalted_faithful }
+		OR = {
+			has_game_rule = ef_rule_auto_grant_court_join
+			has_game_rule = ef_rule_auto_grant_court_and_councillors
+		}
+	}
+	effect = {
+		if = {
+			limit = {
+				exists = liege
+				liege = { is_alive = yes }
+			}
+			liege = { save_scope_as = ef_patron }
+		}
+		else_if = {
+			limit = {
+				exists = host
+				host = { is_alive = yes }
+			}
+			host = { save_scope_as = ef_patron }
+		}
+		if = {
+			limit = { exists = scope:ef_patron }
+			ef_try_auto_grant_exalted_faithful_effect = yes
 		}
 	}
 }

@@ -124,3 +124,70 @@ ef_rule_bga_mode = {
 	ef_rule_bga_mode_force_core_only = {
 	}
 }
+
+### Expansion — automation
+ef_rule_auto_grant = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_auto_grant_off
+
+	ef_rule_auto_grant_off = {
+	}
+
+	ef_rule_auto_grant_court_join = {
+		flag = blocks_achievements
+	}
+
+	ef_rule_auto_grant_councillors = {
+		flag = blocks_achievements
+	}
+
+	ef_rule_auto_grant_court_and_councillors = {
+		flag = blocks_achievements
+	}
+}
+
+ef_rule_auto_strip_decisions = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_auto_strip_decisions_on
+
+	ef_rule_auto_strip_decisions_on = {
+	}
+
+	ef_rule_auto_strip_decisions_off = {
+	}
+}
+
+### Next-iter — conversion pulse + fervor proxy
+ef_rule_conversion_pulse = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_conversion_pulse_on
+
+	ef_rule_conversion_pulse_on = {
+	}
+
+	ef_rule_conversion_pulse_off = {
+	}
+}
+
+ef_rule_fervor_proxy = {
+	categories = {
+		tweaks
+	}
+
+	default = ef_rule_fervor_proxy_on
+
+	ef_rule_fervor_proxy_on = {
+	}
+
+	ef_rule_fervor_proxy_off = {
+	}
+}
